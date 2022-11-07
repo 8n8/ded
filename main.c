@@ -342,6 +342,28 @@ static inline int consume_block_comment(char buf[CODE_BUF_SIZE], int i, int buf_
 	}
 }
 
+static int consume_ignore_list(char buf[CODE_BUF_SIZE], int i, int size) {
+	int verbatim_size = consume_verbatim_string(buf, i, size);
+	if (verbatim_size > 0) {
+		return verbatim_size;
+	}
+
+	int normal_string_size = consume_normal_string(buf, i, size);
+	if (normal_string_size > 0) {
+		return normal_string_size;
+	}
+
+	int block_comment_size = consume_block_comment(buf, i, size);
+	if (block_comment_size > 0) {
+		return block_comment_size;
+	}
+
+	int record_size = consume_record(buf, i, size);
+	if (record_size > 0) {
+		return record_size;
+	}
+}
+
 static inline int consume_ignore(char buf[CODE_BUF_SIZE], int i, int size) {
 	int verbatim_size = consume_verbatim_string(buf, i, size);
 	if (verbatim_size > 0) {
@@ -359,6 +381,109 @@ static inline int consume_ignore(char buf[CODE_BUF_SIZE], int i, int size) {
 	}
 
 	return consume_line_comment(buf, i, size);
+}
+
+static void format_expression_level(
+	char one[CODE_BUF_SIZE],
+	char two[CODE_BUF_SIZE],
+	int* one_size,
+	int* two_size,
+	int nesting_level) {
+
+	int nesting = 0;
+	int has_newlines = 0;
+	int column = 0;
+	int start_column = 0;
+	int two_i = 0;
+	for (int one_i = 0; one_i < *one_size; ++one_i) {
+		one_i += consume_ignore_list(one, one_i, *one_size);
+		if (one[one_i] == '[') {
+			++nesting;
+		}
+		if (one[one_i] == '[' && nesting == nesting_level) {
+			has_newlines = check_for_newlines(one, *one_size, one_i);
+			start_column = column;
+		}
+		if (one[one_i] == ']') {
+			--nesting;
+		}
+		if (one[one_i] == '\n') {
+			column = 0;
+		} else {
+			++column;
+		}
+		if (nesting == nesting_level && one[one_i] == ',') {
+			for (; one_i < *one_size && one[i] == ' '; ++i) {
+			}
+
+			if (one[one_i] != '\n') {
+				two[two_i] = '\n';
+				++two_i;
+				for (int i = 0; i < start_column; ++i) {
+					two[two_i] = ' ';
+					++two_i;
+				}
+				two[two_i] = ',';
+				++two_i;
+				two[two_i] = ' ';
+				++two_i;
+			}
+		}
+
+		two[two_i] = one[one_i];
+	}
+	*two_size = two_i;
+}
+
+static int max_expression_nesting(char one[CODE_BUF_SIZE], int* one_size) {
+	int max_nesting = 0;	
+
+	int nesting = 0;
+	for (int one_i = 0; one_i < *one_size; ++one_i) {
+		one_i += consume_ignore(one, one_i, *one_size);
+
+		if (one[one_i] == '[') {
+			++nesting;
+			continue;
+		}
+
+		if (one[one_i] == ']') {
+			if (nesting > max_nesting) {
+				max_nesting = nesting;
+			}
+			--nesting;
+		}
+	}
+
+	return max_nesting;
+}
+
+static void format_expression(
+	char one[CODE_BUF_SIZE],
+	char two[CODE_BUF_SIZE],
+	int* one_size,
+	int* two_size) {
+
+	int max_nesting = max_expression_nesting(one, one_size);
+
+	int i = 0;
+	for (; i < max_nesting; ++i) {
+		if (i%2 == 0) {
+			format_expression_level(one, two, one_size, two_size, i);
+			continue;
+		}
+
+		format_expression_level(two, one, two_size, one_size, i);
+	}
+
+	if (i%2 == 0) {
+		return;
+	}
+
+	for (int j = 0; j < *one_size; j++) {
+		two[j] = one[j];
+	}
+	*two_size = *one_size;
 }
 
 static void toplevel_body_indent(
@@ -588,6 +713,11 @@ static int format_file(char path[MAX_PATH]) {
 		CODE_BUFFERS.two,
 		&CODE_BUFFERS.one_size,
 		&CODE_BUFFERS.two_size);
+	format_expression(
+		CODE_BUFFERS.two,
+		CODE_BUFFERS.one,
+		&CODE_BUFFERS.two_size,
+		&CODE_BUFFERS.one_size);
 
 	FILE* handle_out = fopen(path, "w");
 	if (handle_out == NULL) {
@@ -595,8 +725,8 @@ static int format_file(char path[MAX_PATH]) {
 		return -1;
 	}
 
-	n = fwrite(CODE_BUFFERS.two, 1, CODE_BUFFERS.two_size, handle_out);
-	if (n != CODE_BUFFERS.two_size) {
+	n = fwrite(CODE_BUFFERS.one, 1, CODE_BUFFERS.one_size, handle_out);
+	if (n != CODE_BUFFERS.one_size) {
 		printf("failed writing output to %s", path);
 		fclose(handle_out);
 		return -1;
