@@ -16,11 +16,11 @@ static void swap_buffers(
 	int* one_size,
 	int* two_size) {
 
-	uint8_t tmp;
-	for (int j = 0; j < *one_size; ++j) {
-		tmp = one[j];
-		two[j] = one[j];
-		one[j] = tmp;
+	uint8_t two_tmp;
+	for (int i = 0; i < *one_size; ++i) {
+		two_tmp = two[i];
+		two[i] = one[i];
+		one[i] = two_tmp;
 	}
 
 	int one_size_tmp = *one_size;
@@ -505,10 +505,11 @@ static void format_expression(
 	int* two_size) {
 
 	int max_nesting = max_list_nesting(one, *one_size);
+
 	format_list_pass(one, two, one_size, two_size, max_nesting);
 
 	int i = 0;
-	for (; !equal_buffers(one, two, *one_size, *two_size); ++i) {
+	for (; max_nesting > 0 && !equal_buffers(one, two, *one_size, *two_size); ++i) {
 
 		if (i%2 == 0) {
 			format_list_pass(one, two, one_size, two_size, max_nesting);
