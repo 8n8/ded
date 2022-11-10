@@ -379,6 +379,28 @@ static inline int consume_ignore(char buf[CODE_BUF_SIZE], int i, int size) {
 	return consume_line_comment(buf, i, size);
 }
 
+static int list_has_newlines(
+	char buf[CODE_BUF_SIZE],
+	int i,
+	int buf_size) {
+
+	int nesting = 0;
+	for (; !(nesting == 0 && buf[i] == ']'); ++i) {
+		i += consume_ignore(buf, i, buf_size);
+		if (buf[i] == '[') {
+			++nesting;
+		}
+		if (buf[i] == ']') {
+			--nesting;
+		}
+		if (buf[i] == '\n') {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 
 static void format_list_level(
 	char one[CODE_BUF_SIZE],
@@ -398,12 +420,7 @@ static void format_list_level(
 			++nesting;
 		}
 		if (one[one_i] == '[' && nesting == nesting_level) {
-			for (int i = one_i; i < *one_size; ++i) {
-				if (one[i] == '\n') {
-					has_newlines = 1;
-					break;
-				}
-			}
+			has_newlines = list_has_newlines(one, one_i+1, *one_size);
 			start_column = column;
 		}
 		if (one[one_i] == ']') {
@@ -433,6 +450,7 @@ static void format_list_level(
 		}
 
 		two[two_i] = one[one_i];
+		++two_i;
 	}
 	*two_size = two_i;
 }
