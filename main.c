@@ -430,6 +430,13 @@ static void format_list_level(
 		} else {
 			++column;
 		}
+		if (nesting == nesting_level && one[one_i-1] == '[') {
+			two[two_i] = ' ';
+			++two_i;
+
+			for (; one[one_i] == ' '; ++one_i) {
+			}
+		}
 		if (nesting == nesting_level && one[one_i] == ',' && has_newlines) {
 			--two_i;
 			for (; two[two_i] == ' ' || two[two_i] == '\n'; --two_i) {
