@@ -401,7 +401,6 @@ static int list_has_newlines(
 	return 0;
 }
 
-
 static void format_list_level(
 	char one[CODE_BUF_SIZE],
 	char two[CODE_BUF_SIZE],
@@ -432,20 +431,25 @@ static void format_list_level(
 			++column;
 		}
 		if (nesting == nesting_level && one[one_i] == ',' && has_newlines) {
-			for (; one_i < *one_size && one[one_i] == ' '; ++one_i) {
+			--two_i;
+			for (; two[two_i] == ' ' || two[two_i] == '\n'; --two_i) {
 			}
 
-			if (one[one_i] != '\n') {
-				two[two_i] = '\n';
-				++two_i;
-				for (int i = 0; i < start_column; ++i) {
-					two[two_i] = ' ';
-					++two_i;
-				}
-				two[two_i] = ',';
-				++two_i;
+			++two_i;
+			two[two_i] = '\n';
+			++two_i;
+
+			for (int i = 0; i < start_column; ++i) {
 				two[two_i] = ' ';
 				++two_i;
+			}
+			two[two_i] = ',';
+			++two_i;
+			two[two_i] = ' ';
+			++two_i;
+
+			++one_i;
+			for (; one[one_i] == ' ' || one[one_i] == '\n'; ++one_i) {
 			}
 		}
 
@@ -490,7 +494,7 @@ static void format_list_pass(
 		format_list_level(two, one, two_size, one_size, i+1);
 	}
 
-	if (i%2 == 0) {
+	if (i%2 == 1) {
 		return;
 	}
 
