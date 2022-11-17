@@ -446,20 +446,17 @@ static void format_list_level(
 		if (one[one_i] == ']' && has_newlines && nesting+1 == nesting_level) {
 			int init_two_i = two_i;
 			--two_i;
-			for (; two[two_i] == ' '; --two_i) {
+			for (; two[two_i] == ' ' || two[two_i] == '\n'; --two_i) {
 			}
 
-			if (two[two_i] == '\n') {
-				two_i = init_two_i;
-			} else {
-				++two_i;
-				two[two_i] = '\n';
-				++two_i;
+			++two_i;
 
-				for (int i = 0; i < start_column; ++i) {
-					two[two_i] = ' ';
-					++two_i;
-				}
+			two[two_i] = '\n';
+			++two_i;
+
+			for (int i = 0; i < start_column; ++i) {
+				two[two_i] = ' ';
+				++two_i;
 			}
 		}
 		if (nesting == nesting_level && one[one_i] == ',' && has_newlines) {
