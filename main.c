@@ -430,7 +430,7 @@ static void format_list_level(
 		} else {
 			++column;
 		}
-		if (one[one_i+1] == ']' && has_newlines) {
+		if (one[one_i] == ']' && has_newlines && nesting+1 == nesting_level) {
 			int init_two_i = two_i;
 			--two_i;
 			for (; two[two_i] == ' '; --two_i) {
@@ -447,7 +447,6 @@ static void format_list_level(
 					two[two_i] = ' ';
 					++two_i;
 				}
-				++one_i;
 			}
 		}
 		if (nesting == nesting_level && one[one_i-1] == '[') {
@@ -559,7 +558,6 @@ static void format_expression(
 
 	int i = 0;
 	for (; max_nesting > 0 && !equal_buffers(one, two, *one_size, *two_size); ++i) {
-		printf("here: %d\n", i);
 
 		if (i%2 == 0) {
 			format_list_pass(two, one, two_size, one_size, max_nesting);
