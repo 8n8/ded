@@ -454,7 +454,17 @@ static void format_list_level(
 			for (; one[one_i] == ' ' || one[one_i] == '\n'; ++one_i) {
 			}
 		}
+		if (one[one_i] == ']' && !has_newlines && nesting+1 == nesting_level) {
+			int init_two_i = two_i;
+			--two_i;
+			for (; two[two_i] == ' '; --two_i) {
+			}
 
+			++two_i;
+
+			two[two_i] = ' ';
+			++two_i;
+		}
 		if (one[one_i] == ']' && has_newlines && nesting+1 == nesting_level) {
 			int init_two_i = two_i;
 			--two_i;
