@@ -408,73 +408,23 @@ static void format_list_level(
 	int* two_size,
 	int nesting_level) {
 
-        printf("nesting_level: %d\n", nesting_level);
-
 	int nesting = 0;
 	int has_newlines = 0;
-	int column = 0;
 	int start_column = 0;
 	int two_i = 0;
 	for (int one_i = 0; one_i < *one_size; ++one_i) {
 		one_i += consume_ignore(one, one_i, *one_size);
-
-		if (one[one_i] == '\n') {
-			column = 0;
-		} else {
-			++column;
-		}
 
 		if (one[one_i] == '[') {
 			++nesting;
 		}
 		if (one[one_i] == '[' && nesting == nesting_level) {
 			has_newlines = list_has_newlines(one, one_i+1, *one_size);
-			start_column = column;
-		}
-
-		if (one[one_i] == '[' && !has_newlines && nesting == nesting_level) {
-			two[two_i] = '[';
-			++two_i;
-
-			++one_i;
-
-			for (; one[one_i] == ' '; ++one_i) {
-			}
-                        --one_i;
-
-                        if (one[one_i] != ' ') {
-                                two[two_i] = ' ';
-                                ++two_i;
+                        for (start_column = 0; one[one_i - start_column - 1] != '\n'; ++start_column) {
                         }
 		}
-		if (one[one_i] == '[' && has_newlines && nesting == nesting_level) {
-			two[two_i] = '[';
-			++two_i;
 
-			++one_i;
-
-			for (; one[one_i] == ' ' || one[one_i] == '\n'; ++one_i) {
-			}
-                        --one_i;
-
-                        if (one[one_i] != ' ') {
-                                two[two_i] = ' ';
-                                ++two_i;
-                        }
-		}
-		if (one[one_i] == ']' && !has_newlines && nesting == nesting_level) {
-			int init_two_i = two_i;
-			--two_i;
-			for (; two[two_i] == ' '; --two_i) {
-			}
-
-			++two_i;
-
-			two[two_i] = ' ';
-			++two_i;
-		}
 		if (one[one_i] == ']' && has_newlines && nesting == nesting_level) {
-			int init_two_i = two_i;
 			--two_i;
 			for (; two[two_i] == ' ' || two[two_i] == '\n'; --two_i) {
 			}
@@ -488,26 +438,6 @@ static void format_list_level(
 				two[two_i] = ' ';
 				++two_i;
 			}
-		}
-		if (nesting == nesting_level && one[one_i] == ',' && !has_newlines) {
-			--two_i;
-			for (; two[two_i] == ' '; --two_i) {
-			}
-
-			++two_i;
-
-			two[two_i] = ',';
-			++two_i;
-
-			++one_i;
-			for (; one[one_i] == ' '; ++one_i) {
-			}
-                        --one_i;
-
-                        if (one[one_i] != ' ') {
-                                two[two_i] = ' ';
-                                ++two_i;
-                        }
 		}
 
 		if (nesting == nesting_level && one[one_i] == ',' && has_newlines) {
@@ -523,18 +453,6 @@ static void format_list_level(
 				two[two_i] = ' ';
 				++two_i;
 			}
-			two[two_i] = ',';
-			++two_i;
-
-			++one_i;
-			for (; one[one_i] == ' ' || one[one_i] == '\n'; ++one_i) {
-			}
-                        --one_i;
-
-                        if (one[one_i] != ' ') {
-                                two[two_i] = ' ';
-                                ++two_i;
-                        }
 		}
 
 		if (one[one_i] == ']') {
