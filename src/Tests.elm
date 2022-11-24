@@ -1,2 +1,2 @@
-calc firstExpr expression secondExpr =
+c =
             cssFunction "calc" [ calcs ]
