@@ -379,6 +379,41 @@ static inline int consume_ignore(char buf[CODE_BUF_SIZE], int i, int size) {
 	return consume_line_comment(buf, i, size);
 }
 
+static inline int consume_parenthesised(char buf[CODE_BUF_SIZE], int i, int buf_size) {
+	if (buf[i] != '(') {
+		return 0;
+	}
+
+	++i;
+
+	int size = 0;
+	int nesting = 0;
+
+	for (; size <= buf_size; ++size) {
+		if (buf[i+size] == '(') {
+			++nesting;
+			continue;
+		}
+
+		if (buf[i+size] == ')') {
+			if (nesting == 0) {
+				return size;
+			}
+
+			--nesting;
+		}
+	}
+}
+
+static inline int consume_ignore_list(char buf[CODE_BUF_SIZE], int i, int size) {
+	int common_size = consume_ignore(buf, i, size);
+	if (common_size > 0) {
+		return common_size;
+	}
+
+	return consume_parenthesised(buf, i, size);
+}
+
 static int list_has_newlines(
 	char buf[CODE_BUF_SIZE],
 	int i,
@@ -413,7 +448,7 @@ static void format_list_level(
 	int start_column = 0;
 	int two_i = 0;
 	for (int one_i = 0; one_i < *one_size; ++one_i) {
-		int ignore_size = consume_ignore(one, one_i, *one_size);
+		int ignore_size = consume_ignore_list(one, one_i, *one_size);
 		for (int i = 0; i < ignore_size; ++i) {
 			two[two_i] = one[one_i];
 			++one_i;
