@@ -1,12 +1,5 @@
 calc firstExpr expression secondExpr =
     let
-        calcs =
-            withoutCalcStr firstExpr
-                ++ " "
-                ++ calcExpressionToString expression
-                ++ " "
-                ++ withoutCalcStr secondExpr
-
         value =
             cssFunction "calc" [ calcs ]
     in
