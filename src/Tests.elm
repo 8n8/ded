@@ -1,4 +1,3 @@
-calc : Calc compatibleA -> CalcExpression -> Calc compatibleB -> CalculatedLength
 calc firstExpr expression secondExpr =
     let
         calcs =
