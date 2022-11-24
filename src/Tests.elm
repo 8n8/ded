@@ -1,2 +1,2 @@
 c =
-    x "calc" [ calcs ]
+    x "" [ calcs ]
