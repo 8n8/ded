@@ -379,6 +379,32 @@ static inline int consume_ignore(char buf[CODE_BUF_SIZE], int i, int size) {
 	return consume_line_comment(buf, i, size);
 }
 
+static inline int consume_bracketed(char buf[CODE_BUF_SIZE], int i, int buf_size) {
+	if (buf[i] != '{') {
+		return 0;
+	}
+
+	++i;
+
+	int size = 0;
+	int nesting = 0;
+
+	for (; size <= buf_size; ++size) {
+		if (buf[i+size] == '{') {
+			++nesting;
+			continue;
+		}
+
+		if (buf[i+size] == '}') {
+			if (nesting == 0) {
+				return size;
+			}
+
+			--nesting;
+		}
+	}
+}
+
 static inline int consume_parenthesised(char buf[CODE_BUF_SIZE], int i, int buf_size) {
 	if (buf[i] != '(') {
 		return 0;
@@ -411,7 +437,12 @@ static inline int consume_ignore_list(char buf[CODE_BUF_SIZE], int i, int size) 
 		return common_size;
 	}
 
-	return consume_parenthesised(buf, i, size);
+	int parenthesis_size =  consume_parenthesised(buf, i, size);
+	if (parenthesis_size > 0) {
+		return parenthesis_size;
+	}
+
+	return consume_bracketed(buf, i, size);
 }
 
 static int list_has_newlines(
