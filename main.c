@@ -413,7 +413,12 @@ static void format_list_level(
 	int start_column = 0;
 	int two_i = 0;
 	for (int one_i = 0; one_i < *one_size; ++one_i) {
-		one_i += consume_ignore(one, one_i, *one_size);
+		int ignore_size = consume_ignore(one, one_i, *one_size);
+		for (int i = 0; i < ignore_size; ++i) {
+			two[two_i] = one[one_i];
+			++one_i;
+			++two_i;
+		}
 
 		if (one[one_i] == '[') {
 			++nesting;
