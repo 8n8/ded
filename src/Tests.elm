@@ -1,7 +1,3 @@
-module Css exposing
-    ( Style, batch
-    )
-
 {-| Define CSS styles in Elm.
 
     import Css exposing (..)
