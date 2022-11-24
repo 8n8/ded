@@ -1,2 +1,2 @@
 c =
-    cssFunction "calc" [ calcs ]
+    x "calc" [ calcs ]
