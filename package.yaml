@@ -9,6 +9,8 @@ ghc-options:
 - -Wno-missing-safe-haskell-mode
 - -Wno-safe
 - -Wno-implicit-prelude
+- -Wno-prepositive-qualified-module
+- -Wno-missing-kind-signatures
 
 executables:
   ded-exe:
