@@ -30,10 +30,10 @@ data FileError
   | Permission
   | General String
 
-fill :: Buffer -> String -> IO (Either FileError ())
-fill buffer path =
+fill :: Buffer -> System.IO.Handle -> IO (Either FileError ())
+fill buffer handle =
   do
-    result <- fillCaught buffer path
+    result <- fillCaught buffer handle
     case result of
       Left err ->
         if System.IO.Error.isDoesNotExistError err
@@ -45,13 +45,9 @@ fill buffer path =
       Right () ->
         return (Right ())
 
-fillCaught :: Buffer -> String -> IO (Either IOError ())
-fillCaught buffer path =
-  Control.Exception.try (fillCanThrow buffer path)
-
-fillCanThrow :: Buffer -> String -> IO ()
-fillCanThrow buffer path =
-  System.IO.withFile path System.IO.ReadMode (fillFromHandle buffer)
+fillCaught :: Buffer -> System.IO.Handle -> IO (Either IOError ())
+fillCaught buffer handle =
+  Control.Exception.try (fillFromHandle buffer handle)
 
 fillFromHandle :: Buffer -> System.IO.Handle -> IO ()
 fillFromHandle (Buffer sizePointer bufferPointer) handle =

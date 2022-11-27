@@ -2,6 +2,7 @@ name:                ded
 
 dependencies:
 - base
+- directory
 
 ghc-options:
 - -Werror
