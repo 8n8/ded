@@ -597,7 +597,7 @@ static int max_list_nesting(char one[CODE_BUF_SIZE], int one_size) {
 	return max_nesting;
 }
 
-static void format_expression(
+static void format_expressions(
 	char one[CODE_BUF_SIZE],
 	char two[CODE_BUF_SIZE],
 	int* one_size,
@@ -623,6 +623,76 @@ static void format_expression(
 	}
 
 	swap_buffers(one, two, one_size, two_size);
+}
+
+void format_expression(
+	char one[CODE_BUF_SIZE],
+	char two[CODE_BUF_SIZE],
+	int one_size,
+	int two_size,
+	int* one_i,
+	int* two_i);
+
+void format_int_literal(
+	char one[CODE_BUF_SIZE],
+	char two[CODE_BUF_SIZE],
+	int one_size,
+	int two_size,
+	int* one_i_ptr,
+	int* two_i_ptr) {
+
+	// 0xff 123
+	// terminal characters are ) , ] + - * / \n < > space
+
+	if (one[*one_i_ptr] < '0' || one[*one_i_ptr] > '9') {
+		return;
+	}
+
+	int one_i = *one_i_ptr;
+	int two_i = *two_i_ptr;
+
+	for (
+		;
+		one[one_i] == 'x' ||
+		(one[one_i] >= 'a' && one[one_i] <= 'f') ||
+		(one[one_i] >= '0' && one[one_i] <= '9');
+		++one_i) {
+
+		++two_i;
+	}
+
+	if (!(
+		one[one_i] == ')' ||
+		one[one_i] == ',' ||
+		one[one_i] == ']' ||
+		one[one_i] == '+' ||
+		one[one_i] == '-' ||
+		one[one_i] == '*' ||
+		one[one_i] == '/' ||
+		one[one_i] == '\n' ||
+		one[one_i] == '<' ||
+		one[one_i] == '>' ||
+		one[one_i] == ' ')) {
+
+		return;
+	}
+
+	++one_i;
+	++two_i;
+
+	*one_i_ptr = one_i;
+	*two_i_ptr = two_i;
+}
+
+void format_expression(
+	char one[CODE_BUF_SIZE],
+	char two[CODE_BUF_SIZE],
+	int one_size,
+	int two_size,
+	int* one_i,
+	int* two_i) {
+
+	format_int_literal(one, two, one_size, two_size, one_i, two_i);
 }
 
 static void toplevel_body_indent(
@@ -694,6 +764,14 @@ static void toplevel_body_indent(
 				two[two_i] = ' ';
 				++two_i;
 			}
+
+			format_expression(
+				one,
+				two,
+				*one_size,
+				*two_size,
+				&one_i,
+				&two_i);
 		}
 
 		two[two_i] = one[one_i];
@@ -852,7 +930,7 @@ static int format_file(char path[MAX_PATH]) {
 		CODE_BUFFERS.two,
 		&CODE_BUFFERS.one_size,
 		&CODE_BUFFERS.two_size);
-	format_expression(
+	format_expressions(
 		CODE_BUFFERS.two,
 		CODE_BUFFERS.one,
 		&CODE_BUFFERS.two_size,
