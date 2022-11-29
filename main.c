@@ -633,6 +633,62 @@ void format_expression(
 	int* one_i,
 	int* two_i);
 
+
+static int terminal_num_char(char ch) {
+	char terminals[11] = "),]+-*/\n<> ";
+	for (int i = 0; i < 11; ++i) {
+		if (terminals[i] == ch) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+void format_float_literal(
+	char one[CODE_BUF_SIZE],
+	char two[CODE_BUF_SIZE],
+	int one_size,
+	int two_size,
+	int* one_i_ptr,
+	int* two_i_ptr) {
+
+	// 0 42 3.14 0.1234 6.022e23 6.022e+23 1.602e-19 1e3
+	// terminal characters are ) , ] + - * / \n < > space
+
+	if (one[*one_i_ptr] < '0' || one[*one_i_ptr] > '9') {
+		return;
+	}
+
+	int one_i = *one_i_ptr;
+	int two_i = *two_i_ptr;
+
+	for (
+		;
+		(one[one_i] >= '0' && one[one_i] <= '9') ||
+		one[one_i] == '.';
+		++one_i) {
+	}
+
+	if (one[one_i] == 'e') {
+		++one_i;
+		if (one[one_i] == '+' || one[one_i] == '-') {
+			++one_i;
+		}
+		for (; one[one_i] >= '0' && one[one_i] <= '9'; ++one_i) {
+		}
+	}
+
+	if (!terminal_num_char(one[one_i])) {
+		return;
+	}
+
+	for (; *one_i_ptr < one_i; *one_i_ptr++) {
+		two[*two_i_ptr] = one[*one_i_ptr];
+		++*two_i_ptr;
+	}
+}
+
 void format_int_literal(
 	char one[CODE_BUF_SIZE],
 	char two[CODE_BUF_SIZE],
@@ -657,31 +713,16 @@ void format_int_literal(
 		(one[one_i] >= 'a' && one[one_i] <= 'f') ||
 		(one[one_i] >= '0' && one[one_i] <= '9');
 		++one_i) {
-
-		++two_i;
 	}
 
-	if (!(
-		one[one_i] == ')' ||
-		one[one_i] == ',' ||
-		one[one_i] == ']' ||
-		one[one_i] == '+' ||
-		one[one_i] == '-' ||
-		one[one_i] == '*' ||
-		one[one_i] == '/' ||
-		one[one_i] == '\n' ||
-		one[one_i] == '<' ||
-		one[one_i] == '>' ||
-		one[one_i] == ' ')) {
-
+	if (!terminal_num_char(one[one_i])) {
 		return;
 	}
 
-	++one_i;
-	++two_i;
-
-	*one_i_ptr = one_i;
-	*two_i_ptr = two_i;
+	for (; *one_i_ptr < one_i; *one_i_ptr++) {
+		two[*two_i_ptr] = one[*one_i_ptr];
+		++*two_i_ptr;
+	}
 }
 
 void format_expression(
@@ -692,7 +733,12 @@ void format_expression(
 	int* one_i,
 	int* two_i) {
 
+	int one_start = *one_i;
 	format_int_literal(one, two, one_size, two_size, one_i, two_i);
+	if (*one_i > one_start) {
+		return;
+	}
+	format_float_literal(one, two, one_size, two_size, one_i, two_i);
 }
 
 static void toplevel_body_indent(
