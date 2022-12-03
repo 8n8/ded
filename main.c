@@ -445,18 +445,26 @@ static inline int consume_ignore_list(char buf[CODE_BUF_SIZE], int i, int size) 
 	return consume_bracketed(buf, i, size);
 }
 
+static int is_open_bracket(char ch) {
+	return ch == '(' || ch == '[' || ch == '{';
+}
+
+static int is_close_bracket(char ch) {
+	return ch == ')' || ch == ']' || ch == '}';
+}
+
 static int list_has_newlines(
 	char buf[CODE_BUF_SIZE],
 	int i,
 	int buf_size) {
 
 	int nesting = 0;
-	for (; !(nesting == 0 && buf[i] == ']'); ++i) {
+	for (; !(nesting == 0 && is_close_bracket(buf[i])); ++i) {
 		i += consume_ignore(buf, i, buf_size);
-		if (buf[i] == '[') {
+		if (is_open_bracket(buf[i])) {
 			++nesting;
 		}
-		if (buf[i] == ']') {
+		if (is_close_bracket(buf[i])) {
 			--nesting;
 		}
 		if (buf[i] == '\n') {
@@ -479,23 +487,23 @@ static void format_list_level(
 	int start_column = 0;
 	int two_i = 0;
 	for (int one_i = 0; one_i < *one_size; ++one_i) {
-		int ignore_size = consume_ignore_list(one, one_i, *one_size);
+		int ignore_size = consume_ignore(one, one_i, *one_size);
 		for (int i = 0; i < ignore_size; ++i) {
 			two[two_i] = one[one_i];
 			++one_i;
 			++two_i;
 		}
 
-		if (one[one_i] == '[') {
+		if (is_open_bracket(one[one_i])) {
 			++nesting;
 		}
-		if (one[one_i] == '[' && nesting == nesting_level) {
+		if (is_open_bracket(one[one_i]) && nesting == nesting_level) {
 			has_newlines = list_has_newlines(one, one_i+1, *one_size);
                         for (start_column = 0; one[one_i - start_column - 1] != '\n'; ++start_column) {
                         }
 		}
 
-		if (one[one_i] == ']' && has_newlines && nesting == nesting_level) {
+		if (is_close_bracket(one[one_i]) && has_newlines && nesting == nesting_level) {
 			--two_i;
 			for (; two[two_i] == ' ' || two[two_i] == '\n'; --two_i) {
 			}
@@ -526,7 +534,7 @@ static void format_list_level(
 			}
 		}
 
-		if (one[one_i] == ']') {
+		if (is_close_bracket(one[one_i])) {
 			--nesting;
 		}
 
