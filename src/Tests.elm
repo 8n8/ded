@@ -5,32 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-This code compiles to the following DOM structure:
-
-    <button class="_df8ab1">Reset<button>
-
-    <style>
-        ._df8ab1 {
-            border-radius: 10px;
-        }
-
-        ._df8ab1:hover {
-            text-decoration: underline;
-        }
-    </style>
-
-With the exception of [`Lazy`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Html-Styled-Lazy),
-you can expect `toUnstyled` to create one `<style>` element **total**, not one
-per element that uses `css`.
-
-`toUnstyled` avoids generating excess `<style>` elements and CSS
-declarations by building up a dictionary of styles you've passed to `css`.
-It will use that dictionary to add a single `<style>` to the DOM with all the
-appropriate classname declarations.
-
-
-### Style Reuse
-
 To reuse styles (like [mixins](http://sass-lang.com/guide#topic-6)
 in other CSS systems) use [`Style`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css#Style)
 values.
