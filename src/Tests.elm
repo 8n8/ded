@@ -384,6 +384,5 @@ deprecated or discouraged.
 Using \* and / with calc isn't supported. Use arithmetics from elm instead.
 
 -}
-calc : Calc compatibleA -> CalcExpression -> Calc compatibleB -> CalculatedLength
-calc firstExpr expression secondExpr =
+x =
     c "" []
