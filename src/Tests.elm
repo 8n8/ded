@@ -11,56 +11,6 @@ module Css exposing
     , src_
     , qt
     , listStyleType, disc, circle, square, decimal, decimalLeadingZero, lowerRoman, upperRoman, lowerGreek, lowerAlpha, lowerLatin, upperAlpha, upperLatin, arabicIndic, armenian, bengali, cjkEarthlyBranch, cjkHeavenlyStem, devanagari, georgian, gujarati, gurmukhi, kannada, khmer, lao, malayalam, myanmar, oriya, telugu, thai
-    , Compatible
-    , backgroundAttachment
-    , backgroundBlendMode
-    , backgroundClip
-    , backgroundImage
-    , backgroundOrigin
-    , backgroundPosition
-    , backgroundPosition2
-    , backgroundRepeat
-    , backgroundRepeat2
-    , backgroundSize
-    , backgroundSize2
-    , both
-    , breakWord
-    , collapse
-    , colorBurn
-    , colorDodge
-    , contain
-    , cover
-    , darken
-    , difference
-    , displayFlex
-    , exclusion
-    , hardLight
-    , horizontal
-    , hue
-    , inlineListItem
-    , inlineTable
-    , lighten
-    , listItem
-    , local
-    , luminosity
-    , manipulation
-    , multiply
-    , noRepeat
-    , overlay
-    , paddingBox
-    , panDown
-    , panLeft
-    , panRight
-    , panUp
-    , panX
-    , panY
-    , pinchZoom
-    , animationName
-    , animationDelay
-    , animationDuration
-    , animationIterationCount
-    , FontSize, ColorValue, ColorStop, IntOrAuto
-    , thin, thick, blink
     )
 
 {-| Define CSS styles in Elm.
