@@ -592,13 +592,13 @@ static int max_list_nesting(char one[CODE_BUF_SIZE], int one_size) {
 	int nesting = 0;
 	for (int i = 0; i < one_size; ++i) {
 		i += consume_ignore(one, i, one_size);
-		if (one[i] == '[') {
+		if (is_open_bracket(one[i])) {
 			++nesting;
 		}
 		if (nesting > max_nesting) {
 			max_nesting = nesting;
 		}
-		if (one[i] == ']') {
+		if (is_close_bracket(one[i])) {
 			--nesting;
 		}
 	}
