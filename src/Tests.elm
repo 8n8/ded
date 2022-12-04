@@ -1,12 +1,12 @@
-module Css exposing
-    ( Style, batch
-    , Color
+module X exposing
+    ( a, b
+    , c
     )
 
 {-|
 
-@docs Style, batch
-@docs Color
+@docs a, b
+@docs c
 
 -}
 
