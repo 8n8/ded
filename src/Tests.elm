@@ -5,38 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-    main : Program Never Model Msg
-    main =
-        Html.beginnerProgram
-            { view = view >> toUnstyled
-            , update = update
-            , model = initialModel
-            }
-
-_See [`examples/readme/`](https://github.com/rtfeldman/elm-css/blob/master/examples/readme) to play around with this example._
-
-The [`css`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Html-Styled-Attributes#css)
-function accepts a list of [`Style`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Html-Styled-Attributes#css)
-values which roughly correspond to [CSS properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference).
-
-    css
-        [ display inlineBlock
-        , padding (px 20)
-        , border3 (px 5) solid (rgb 120 120 120)
-        , hover
-            [ borderColor theme.primary
-            , borderRadius (px 10)
-            ]
-        ]
-
-Let's take a look at some of these declarations.
-
-    display inlineBlock
-
-This compiles to the CSS declaration `display: inline-block;` -
-
-[_Kebab-case_](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles) CSS names become [_camelCase_](https://en.wikipedia.org/wiki/Camel_case) names in elm-css.
-
 The [`Css.display`](#display) function only accepts values that are compatible
 with the CSS `display` property, such as [`inlineBlock`](#inlineBlock), [`flex`](#flex), [`none`](#none), [`inherit`](#inherit), etc.
 If you try to pass `display` an invalid value such as [`pointer`](#pointer), it will not compile!
