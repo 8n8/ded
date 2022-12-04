@@ -387,13 +387,6 @@ Using \* and / with calc isn't supported. Use arithmetics from elm instead.
 calc : Calc compatibleA -> CalcExpression -> Calc compatibleB -> CalculatedLength
 calc firstExpr expression secondExpr =
     let
-        withoutCalcStr l =
-            if String.startsWith "calc(" l.value then
-                String.dropLeft 4 l.value
-
-            else
-                l.value
-
         calcs =
             withoutCalcStr firstExpr
                 ++ " "
