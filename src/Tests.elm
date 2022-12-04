@@ -5,26 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-    {-| Css.property lets you define custom properties, using strings as their values.
-    -}
-    legacyBorderRadius : String -> Style
-    legacyBorderRadius amount =
-        Css.batch
-            [ property "-moz-border-radius" amount
-            , property "-webkit-border-top-left-radius" amount
-            , property "-webkit-border-top-right-radius" amount
-            , property "-webkit-border-bottom-right-radius" amount
-            , property "-webkit-border-bottom-left-radius" amount
-            , property "border-radius" amount
-            ]
-
-    view : Model -> Html Msg
-    view model =
-        nav []
-            [ img [ src "assets/backdrop.jpg", css [ width (pct 100) ] ] []
-            , btn [ onClick DoSomething ] [ text "Click me!" ]
-            ]
-
     main : Program Never Model Msg
     main =
         Html.beginnerProgram
