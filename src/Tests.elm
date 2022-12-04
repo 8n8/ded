@@ -966,31 +966,3 @@ plus =
 minus : CalcExpression
 minus =
     Subtraction
-
-
-combineLengths :
-    (Float -> Float -> Float)
-    -> { r | numericValue : Float, unitLabel : String, value : String }
-    -> { r | numericValue : Float, unitLabel : String, value : String }
-    -> { r | numericValue : Float, unitLabel : String, value : String }
-combineLengths operation firstLength secondLength =
-    let
-        numericValue =
-            operation firstLength.numericValue secondLength.numericValue
-
-        value =
-            String.fromFloat numericValue ++ firstLength.unitLabel
-    in
-    { firstLength | value = value, numericValue = numericValue }
-
-
-{-| <https://developer.mozilla.org/en-US/docs/Web/CSS/length>
--}
-type alias LengthOrAuto compatible =
-    { compatible | value : String, lengthOrAuto : Compatible }
-
-
-{-| <https://developer.mozilla.org/en-US/docs/Web/CSS/length>
--}
-type alias LengthOrNoneOrMinMaxDimension compatible =
-    { compatible | value : String, lengthOrNoneOrMinMaxDimension : Compatible }
