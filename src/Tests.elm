@@ -366,23 +366,5 @@ deprecated or discouraged.
 -}
 
 
-{-| The css [calc](https://developer.mozilla.org/en/docs/Web/CSS/calc) function.
-
-    almostPct100 =
-        calc (pct 100) minus (px 2)
-
-    -- calc(100vh - (2px + 2rem))
-    screenMinusBorderAndFooter =
-        calc (vh 100) minus (calc (px 2) plus (rem 2))
-
-    myWidth =
-        width almostPct100
-
-    myHeight =
-        height screenMinusBorderAndFooter
-
-Using \* and / with calc isn't supported. Use arithmetics from elm instead.
-
--}
 x =
     c "" []
