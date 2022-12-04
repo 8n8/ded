@@ -1,15 +1,6 @@
 module Css exposing
     ( Style, batch
     , Color, all, important, solid, transparent, rgb, rgba, hsl, hsla, hex
-    , featureTag, featureTag2, featureOn, featureOff
-    , Length, pct, px, em, pt, ex, ch, rem, vh, vw, vmin, vmax, mm, cm, inches, pc, int, num, zero, calc, plus, minus
-    , Px, Em, Rem, Pct, Ex, Ch, Vh, Vw, Vmin, Vmax, Mm, Cm, In, Pt, Pc
-    , deg, rad, grad, turn
-    , Duration, sec, ms
-    , pseudoClass, active, any, checked, disabled, empty, enabled, first, firstChild, firstOfType, fullscreen, focus, hover, visited, indeterminate, invalid, lang, lastChild, lastOfType, link, nthChild, nthLastChild, nthLastOfType, nthOfType, onlyChild, onlyOfType, optional, outOfRange, readWrite, required, root, scope, target, valid
-    , pseudoElement, after, before, firstLetter, firstLine, selection
-    , src_
-    , qt
     )
 
 {-| Define CSS styles in Elm.
