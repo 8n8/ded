@@ -5,29 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-The [`Css.display`](#display) function only accepts values that are compatible
-with the CSS `display` property, such as [`inlineBlock`](#inlineBlock), [`flex`](#flex), [`none`](#none), [`inherit`](#inherit), etc.
-If you try to pass `display` an invalid value such as [`pointer`](#pointer), it will not compile!
-
-    padding (px 20)
-
-This compiles to the CSS declaration `padding: 20px;`
-
-Values with units such as [`px`](#px), [`em`](#em), and [`rem`](#rem) are implemented as functions.
-The [`num`](#num) function compiles to unitless numbers; for example, `flexGrow (num 1)` compiles to `flex-grow: 1;`.
-
-[`zero`](#zero) is compatible with declarations that either do or do not expect units, so you can write
-`padding zero` instead of something like `padding (px 0)`. (`padding zero` compiles to `padding: 0;`.)
-
-    border3 (px 5) solid (rgb 120 120 120)
-
-The [`border3`](#border3) function shows a convention in elm-css: when a CSS property supports a variable number of arguments, as is the case with `border`, elm-css commonly provides multiple functions to support those alternatives. For example, [`border`](#border), [`border2`](#border2), and [`border3`](#border3).
-
-    hover
-        [ borderColor theme.primary
-        , borderRadius (px 10)
-        ]
-
 CSS pseudo-classes like `:hover` are implemented as functions that take a list of declarations.
 
 The above compiles to something like this:
