@@ -5,23 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-The `button` is not a normal `Html` value from the `elm-lang/html` package, but
-a [`Html.Styled`](Html-Styled) value which wraps a normal `Html` value and adds
-styling information. Later, when you call [`toUnstyled`](Html-Styled#toUnstyled)
-to convert this value to a normal `Html` value, it adds two elements to the DOM:
-
-    <button class="_df8ab1">Reset<button>
-
-    <style>
-        ._df8ab1 {
-            border-radius: 10px;
-        }
-
-        ._df8ab1:hover {
-            text-decoration: underline;
-        }
-    </style>
-
 To sum up what's happening here:
 
 1.  When you define values using the `css` attribute, elm-css generates a classname and some style information.
