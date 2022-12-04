@@ -10,7 +10,6 @@ module Css exposing
     , pseudoElement, after, before, firstLetter, firstLine, selection
     , src_
     , qt
-    , listStyleType, disc, circle, square, decimal, decimalLeadingZero, lowerRoman, upperRoman, lowerGreek, lowerAlpha, lowerLatin, upperAlpha, upperLatin, arabicIndic, armenian, bengali, cjkEarthlyBranch, cjkHeavenlyStem, devanagari, georgian, gujarati, gurmukhi, kannada, khmer, lao, malayalam, myanmar, oriya, telugu, thai
     )
 
 {-| Define CSS styles in Elm.
