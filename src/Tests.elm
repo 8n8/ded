@@ -5,26 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-In this case, the `bigBold` attribute will be completely ignored in favor of
-the `greenBorder` attribute, because it came last in the attribute list. If you
-want to mix and match styles, use `Style` values!
-
-
-### Unsupported Properties
-
-The CSS spec is, ahem, not small. `elm-css` covers a lot of it, but not all of
-it. Some things are considered too experimental to support, usually because they
-do not have enough browser support. Others haven't been added yet because, well,
-we haven't gotten around to adding them!
-
-If you need something that `elm-css` does not support right now, the
-[`Css.property`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css#property)
-and [`Css.Global.selector`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css-Global#selector)
-functions let you define custom properties and selectors, respectively.
-
-
-# Style
-
 @docs Style, batch
 
 
