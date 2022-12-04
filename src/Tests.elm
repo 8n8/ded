@@ -5,25 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-CSS pseudo-classes like `:hover` are implemented as functions that take a list of declarations.
-
-The above compiles to something like this:
-
-    ._c7f8ba:hover {
-        border-color: #55af6a;
-        border-raidus: 10px;
-    }
-
-Where does that funky classname of `_c7f8ba` come from?
-
-elm-css automatically generates this classname based on the declarations used, and
-uses it to generate a `<style>` element which applies your styles to the page.
-
-When you write this:
-
-    button [ css [ borderRadius (px 10), hover [ textDecoration underline ] ] ]
-        [ text "Reset" ]
-
 The `button` is not a normal `Html` value from the `elm-lang/html` package, but
 a [`Html.Styled`](Html-Styled) value which wraps a normal `Html` value and adds
 styling information. Later, when you call [`toUnstyled`](Html-Styled#toUnstyled)
