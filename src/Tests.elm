@@ -5,39 +5,6 @@ module Css exposing
 
 {-| Define CSS styles in Elm.
 
-To reuse styles (like [mixins](http://sass-lang.com/guide#topic-6)
-in other CSS systems) use [`Style`](http://package.elm-lang.org/packages/rtfeldman/elm-css/latest/Css#Style)
-values.
-
-    greenBorder : Style
-    greenBorder =
-        borderColor green
-
-    bigBold : Style
-    bigBold =
-        Css.batch [ fontWeight bold, fontSize (px 48) ]
-
-    view : Model -> Html Msg
-    view model =
-        button [ css [ bigBold, greenBorder ] ] [ text "Ok" ]
-
-Because only one `css` attribute per element has any effect, you cannot reuse
-styles after compiling them to attributes. Trying to reuse styles by using
-multiple attributes will not not work:
-
-    greenBorder : Attribute msg
-    greenBorder =
-        css [ borderColor green ]
-
-    bigBold : Attribute msg
-    bigBold =
-        css [ fontWeight bold, fontSize (px 48) ]
-
-    view : Model -> Html Msg
-    view model =
-        -- Doesn't work!
-        button [ bigBold, greenBorder ] [ text "Ok" ]
-
 In this case, the `bigBold` attribute will be completely ignored in favor of
 the `greenBorder` attribute, because it came last in the attribute list. If you
 want to mix and match styles, use `Style` values!
