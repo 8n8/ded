@@ -9,3 +9,7 @@ module X exposing
 @docs c
 
 -}
+
+
+x =
+    []
