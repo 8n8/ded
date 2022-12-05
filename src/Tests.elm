@@ -1,15 +1,4 @@
-module ParserTest exposing
-    ( customTypeDeclaration
-    , exposingList
-    , expr
-    , imports
-    , moduleDeclaration
-    , moduleName
-    , portDeclaration
-    , typeAliasDeclaration
-    , type_
-    , valueDeclaration
-    )
+module ParserTest exposing (expr)
 
 expr : Test
 expr =
