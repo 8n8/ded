@@ -178,7 +178,17 @@ static int is_ending_normal_string(
 	char buf[CODE_BUF_SIZE],
 	int size) {
 
-	return i > 0 && buf[i] == '"' && buf[i-1] != '\\';
+	if (buf[i] != '"') {
+		return 0;
+	}
+
+	--i;
+	int num_backslash = 0;
+	for (; buf[i] == '\\'; --i) {
+		++num_backslash;
+	}
+
+	return (num_backslash % 2) == 0;
 }
 
 
