@@ -35,6 +35,18 @@ expr =
                   , tripleQuote "42"
                   , Just (String "42")
                   )
+                , ( "single quote"
+                  , tripleQuote "'"
+                  , Just (String "'")
+                  )
+                , ( "double quote"
+                  , tripleQuote " \" "
+                  , Just (String " \" ")
+                  )
+                , ( "escape backslash"
+                  , tripleQuote "\\\\"
+                  , Just (String "\\")
+                  )
                 ]
               )
             ]
