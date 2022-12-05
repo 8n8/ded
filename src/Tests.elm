@@ -19,15 +19,7 @@ expr =
     describe "Stage.Parse.Parser.expr"
         (List.map runSection
             [ ( "literal multiline string"
-              , [ ( "two numbers"
-                  , tripleQuote "42"
-                  , Just (String "42")
-                  )
-                , ( "single quote"
-                  , tripleQuote "'"
-                  , Just (String "'")
-                  )
-                , ( "double quote"
+              , [ ( "double quote"
                   , tripleQuote " \" "
                   , Just (String " \" ")
                   )
