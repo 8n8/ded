@@ -73,16 +73,5 @@ expr =
                   )
                 ]
               )
-            , ( "literal bool"
-              , [ ( "True"
-                  , "True"
-                  , Just (Bool True)
-                  )
-                , ( "False"
-                  , "False"
-                  , Just (Bool False)
-                  )
-                ]
-              )
             ]
         )
