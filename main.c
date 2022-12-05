@@ -415,7 +415,7 @@ static int consume_exports(char buf[CODE_BUF_SIZE], int i, int size) {
 	for (; buf[i] == ' ' || buf[i] == '\n'; --i) {
 	}
 
-	char exposing[9] = "exposing ";
+	char exposing[9] = " exposing";
 	for (int j = 8; j >= 0; --j) {
 		if (buf[i] != exposing[j]) {
 			return 0;
