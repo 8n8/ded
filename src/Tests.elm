@@ -47,30 +47,6 @@ expr =
                   , tripleQuote "\\\\"
                   , Just (String "\\")
                   )
-                , ( "escape n"
-                  , tripleQuote "\\n"
-                  , Just (String "\n")
-                  )
-                , ( "escape r"
-                  , tripleQuote "\\r"
-                  , Just (String "\u{000D}")
-                  )
-                , ( "escape t"
-                  , tripleQuote "\\t"
-                  , Just (String "\t")
-                  )
-                , ( "emoji"
-                  , tripleQuote "😃"
-                  , Just (String "😃")
-                  )
-                , ( "escaped unicode code point"
-                  , tripleQuote "\\u{1F648}"
-                  , Just (String "🙈")
-                  )
-                , ( "combo of escapes, newlines, and chars"
-                  , tripleQuote "\\u{1F648}\\n\n\n\\r\\t\\\\abc123"
-                  , Just (String "🙈\n\n\n\u{000D}\t\\abc123")
-                  )
                 ]
               )
             ]
