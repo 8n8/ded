@@ -301,9 +301,10 @@ static int equals_but_not_at_end_of_line(char buf[CODE_BUF_SIZE], int i, int siz
 		i > 0 &&
 		buf[i+1] != '=' &&
 		buf[i-1] != '=' &&
-		buf[i-1] != '!' &&
+		buf[i-1] != '/' &&
 		buf[i-1] != '<' &&
 		buf[i-1] != '>' &&
+		buf[i-1] != '|' &&
 		buf[i] == '=' &&
 		buf[consume_spaces(buf, i+1, size)] != '\n';
 }
@@ -709,6 +710,10 @@ static void toplevel_body_indent(
 			one[one_i] == '=' &&
 			one_i < *one_size &&
 			one[one_i + 1] != '=' &&
+			one[one_i - 1] != '|' &&
+			one[one_i - 1] != '<' &&
+			one[one_i - 1] != '>' &&
+			one[one_i - 1] != '/' &&
 			one_i > 0 &&
 			one[one_i - 1] != '=') {
 
