@@ -828,8 +828,8 @@ static void no_trailing_space(
 
 	int two_i = 0;
 	for (int one_i = 0; one_i < *one_size; ++one_i) {
-        int verbatim_size = consume_verbatim_string(one, one_i, *one_size);
-        for (int i = 0; i < verbatim_size; ++i) {
+        int ignore_size = consume_ignore(one, one_i, *one_size);
+        for (int i = 0; i < ignore_size; ++i) {
             two[two_i] = one[one_i];
             ++one_i;
             ++two_i;
