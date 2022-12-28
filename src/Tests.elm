@@ -1,4 +1,2 @@
 type StringType
-    = {- ' -} CharString
-    | {- " -} NormalString
-    | {- """ -} MultilineString
+    = {- """ -} MultilineString
