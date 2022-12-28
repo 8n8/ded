@@ -1,37 +1,3 @@
-literalNumber : Parser_ LocatedExpr
-literalNumber =
-    let
-        parseLiteralNumber =
-            number
-                { int = Int
-                , hex = HexInt
-                , float = Float
-                }
-
-        negateLiteral toBeNegated =
-            case toBeNegated of
-                Int int ->
-                    Int (negate int)
-
-                HexInt int ->
-                    HexInt (negate int)
-
-                Float float ->
-                    Float (negate float)
-
-                _ ->
-                    toBeNegated
-    in
-    P.oneOf
-        [ P.succeed negateLiteral
-            |. P.symbol (P.Token "-" ExpectingMinusSign)
-            |= parseLiteralNumber
-        , parseLiteralNumber
-        ]
-        |> P.inContext InNumber
-        |> located
-
-
 type StringType
     = {- ' -} CharString
     | {- " -} NormalString
