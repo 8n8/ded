@@ -1,2 +1,2 @@
-type StringType
-    = {- """ -} MultilineString
+type S
+    = {- """ -} M
