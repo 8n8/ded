@@ -16,7 +16,20 @@ tests =
     [ Test.Tasty.HUnit.testCase "Hello world formatted" $
         (Ded.format helloWorldFormatted)
           Test.Tasty.HUnit.@?= (Right helloWorldFormatted)
+
+    , Test.Tasty.HUnit.testCase "Remove trailing whitespace" $
+        (Ded.format helloWorldTrailingWhitespace)
+          Test.Tasty.HUnit.@?= (Right helloWorldFormatted)
     ]
+
+helloWorldTrailingWhitespace :: Data.ByteString.ByteString
+helloWorldTrailingWhitespace =
+  "module X exposing (x) \n\
+  \\n\
+  \\n\
+  \x = \n\
+  \    0\n\
+  \"
 
 helloWorldFormatted :: Data.ByteString.ByteString
 helloWorldFormatted =
