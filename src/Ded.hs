@@ -1,4 +1,9 @@
-module Ded exposing (format)
+module Ded (format) where
 
+import qualified Data.ByteString
 
-format bufIn bufOut =
+format ::
+  Data.ByteString.ByteString ->
+  Either String Data.ByteString.ByteString
+format right =
+  Right right

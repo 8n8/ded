@@ -3,24 +3,23 @@ version:             0.1.0.0
 
 dependencies:
 - base >= 4.7 && < 5
-- text
 
 default-extensions:
 - OverloadedStrings
 
 ghc-options:
-- -Wall
-- -Wcompat
-- -Widentities
-- -Wincomplete-record-updates
-- -Wincomplete-uni-patterns
-- -Wmissing-export-lists
-- -Wmissing-home-modules
-- -Wpartial-fields
-- -Wredundant-constraints
+- -Werror
+- -Weverything
+- -Wno-safe
+- -Wno-prepositive-qualified-module
+- -Wno-implicit-prelude
+- -Wno-missing-safe-haskell-mode
+- -Wno-unsafe
 
 library:
   source-dirs: src
+  dependencies:
+  - bytestring
 
 executables:
   ded-exe:
@@ -35,7 +34,7 @@ executables:
 
 tests:
   ded-test:
-    main:                Spec.hs
+    main:                Main.hs
     source-dirs:         test
     ghc-options:
     - -threaded
@@ -44,6 +43,5 @@ tests:
     dependencies:
     - ded
     - tasty-hunit
-    - tasty-quickcheck
-    - tasty-smallcheck
     - tasty
+    - bytestring
