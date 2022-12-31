@@ -19,23 +19,6 @@ oneTest (name, input, expected) =
   Test.Tasty.HUnit.testCase name $
     (Ded.format input) Test.Tasty.HUnit.@?= (Right expected)
 
-cases ::
-  [(String, Data.ByteString.ByteString, Data.ByteString.ByteString)]
-cases =
-  [ ( "Hello world formatted",
-      helloWorldFormatted,
-      helloWorldFormatted
-    ),
-    ( "Remove single trailing whitespace",
-      helloWorldTrailingWhitespace,
-      helloWorldFormatted
-    ),
-    ( "Remove double trailing whitespace",
-      helloWorldTwoTrailingWhitespace,
-      helloWorldFormatted
-    )
-  ]
-
 helloWorldTrailingWhitespace :: Data.ByteString.ByteString
 helloWorldTrailingWhitespace =
   "module X exposing (x) \n\
@@ -62,3 +45,42 @@ helloWorldFormatted =
   \x =\n\
   \    0\n\
   \"
+
+cases ::
+  [(String, Data.ByteString.ByteString, Data.ByteString.ByteString)]
+cases =
+  [ ( "Hello world formatted",
+      helloWorldFormatted,
+      helloWorldFormatted
+    ),
+    ( "Remove single trailing whitespace",
+      helloWorldTrailingWhitespace,
+      helloWorldFormatted
+    ),
+    ( "Remove double trailing whitespace",
+      helloWorldTwoTrailingWhitespace,
+      helloWorldFormatted
+    ),
+    ( "Remove remove trailing whitespace in block comment",
+      "module X exposing (x)\n\
+      \\n\
+      \{- x \n\
+      \   y\n\
+      \-}\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    2\n\
+      \",
+      "module X exposing (x)\n\
+      \\n\
+      \{- x\n\
+      \   y\n\
+      \-}\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    2\n\
+      \"
+    )
+  ]
