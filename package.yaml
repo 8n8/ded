@@ -15,11 +15,14 @@ ghc-options:
 - -Wno-implicit-prelude
 - -Wno-missing-safe-haskell-mode
 - -Wno-unsafe
+- -Wno-missing-kind-signatures
+- -Wno-missing-deriving-strategies
 
 library:
   source-dirs: src
   dependencies:
   - bytestring
+  - attoparsec
 
 executables:
   ded-exe:

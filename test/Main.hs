@@ -15,9 +15,8 @@ tests =
     "Unit tests"
     [ Test.Tasty.HUnit.testCase "Hello world formatted" $
         (Ded.format helloWorldFormatted)
-          Test.Tasty.HUnit.@?= (Right helloWorldFormatted)
-
-    , Test.Tasty.HUnit.testCase "Remove trailing whitespace" $
+          Test.Tasty.HUnit.@?= (Right helloWorldFormatted),
+      Test.Tasty.HUnit.testCase "Remove trailing whitespace" $
         (Ded.format helloWorldTrailingWhitespace)
           Test.Tasty.HUnit.@?= (Right helloWorldFormatted)
     ]
