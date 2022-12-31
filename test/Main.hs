@@ -49,7 +49,7 @@ helloWorldFormatted =
 cases ::
   [(String, Data.ByteString.ByteString, Data.ByteString.ByteString)]
 cases =
-  [ ( "Hello world formatted",
+  [ ( "Hello world formatted, so don't change",
       helloWorldFormatted,
       helloWorldFormatted
     ),
