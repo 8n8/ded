@@ -14,8 +14,34 @@ encode (Verbatim v) =
 
 parse :: Data.Attoparsec.ByteString.Parser Verbatim
 parse =
-  fmap Verbatim $
-    Data.Attoparsec.ByteString.takeWhile1 isVerbatimChar
+  Data.Attoparsec.ByteString.choice
+    [ parseVerbatimString,
+      fmap Verbatim $
+        Data.Attoparsec.ByteString.takeWhile1 isVerbatimChar
+    ]
+
+parseVerbatimString :: Data.Attoparsec.ByteString.Parser Verbatim
+parseVerbatimString =
+  do
+    _ <- Data.Attoparsec.ByteString.string "\"\"\""
+    content <-
+      Data.Attoparsec.ByteString.many' $
+        Data.Attoparsec.ByteString.choice
+          [ Data.Attoparsec.ByteString.takeWhile1
+              (\ch -> ch /= asciiDoubleQuote && ch /= asciiBackslash),
+            Data.Attoparsec.ByteString.string "\\\"",
+            Data.Attoparsec.ByteString.string "\\\\"
+          ]
+    _ <- Data.Attoparsec.ByteString.string "\"\"\""
+    return $ Verbatim ("\"\"\"" <> mconcat content <> "\"\"\"")
+
+asciiBackslash :: Data.Word.Word8
+asciiBackslash =
+  92
+
+asciiDoubleQuote :: Data.Word.Word8
+asciiDoubleQuote =
+  34
 
 isVerbatimChar :: Data.Word.Word8 -> Bool
 isVerbatimChar ch =
