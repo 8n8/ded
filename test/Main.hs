@@ -98,5 +98,19 @@ cases =
       \    -- two\n\
       \    2\n\
       \"
+    ),
+    ( "Don't remove trailing whitespace in verbatim string",
+      trailingWhitespaceInVerbatimString,
+      trailingWhitespaceInVerbatimString
     )
   ]
+
+trailingWhitespaceInVerbatimString :: Data.ByteString.ByteString
+trailingWhitespaceInVerbatimString =
+  "module X exposing (x)\n\
+  \\n\
+  \\n\
+  \x =\n\
+  \    \"\"\" \n\
+  \\"\"\"\n\
+  \"
