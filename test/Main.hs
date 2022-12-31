@@ -82,5 +82,21 @@ cases =
       \x =\n\
       \    2\n\
       \"
+    ),
+    ( "Remove trailing whitespace in line comment",
+      "module X exposing (x)\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    -- two \n\
+      \    2\n\
+      \",
+      "module X exposing (x)\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    -- two\n\
+      \    2\n\
+      \"
     )
   ]
