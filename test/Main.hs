@@ -61,7 +61,7 @@ cases =
       helloWorldTwoTrailingWhitespace,
       helloWorldFormatted
     ),
-    ( "Remove remove trailing whitespace in block comment",
+    ( "Remove trailing whitespace in block comment",
       "module X exposing (x)\n\
       \\n\
       \{- x \n\
