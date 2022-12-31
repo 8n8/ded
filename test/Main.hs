@@ -11,18 +11,30 @@ main =
 
 tests :: Test.Tasty.TestTree
 tests =
-  Test.Tasty.testGroup
-    "Unit tests"
-    [ Test.Tasty.HUnit.testCase "Hello world formatted" $
-        (Ded.format helloWorldFormatted)
-          Test.Tasty.HUnit.@?= (Right helloWorldFormatted),
-      Test.Tasty.HUnit.testCase "Remove single trailing whitespace" $
-        (Ded.format helloWorldTrailingWhitespace)
-          Test.Tasty.HUnit.@?= (Right helloWorldFormatted),
-      Test.Tasty.HUnit.testCase "Remove double trailing whitespace" $
-        (Ded.format helloWorldTwoTrailingWhitespace)
-          Test.Tasty.HUnit.@?= (Right helloWorldFormatted)
-    ]
+  Test.Tasty.testGroup "Unit tests" $
+    map oneTest cases
+
+oneTest :: (String, Data.ByteString.ByteString, Data.ByteString.ByteString) -> Test.Tasty.TestTree
+oneTest (name, input, expected) =
+  Test.Tasty.HUnit.testCase name $
+    (Ded.format input) Test.Tasty.HUnit.@?= (Right expected)
+
+cases ::
+  [(String, Data.ByteString.ByteString, Data.ByteString.ByteString)]
+cases =
+  [ ( "Hello world formatted",
+      helloWorldFormatted,
+      helloWorldFormatted
+    ),
+    ( "Remove single trailing whitespace",
+      helloWorldTrailingWhitespace,
+      helloWorldFormatted
+    ),
+    ( "Remove double trailing whitespace",
+      helloWorldTwoTrailingWhitespace,
+      helloWorldFormatted
+    )
+  ]
 
 helloWorldTrailingWhitespace :: Data.ByteString.ByteString
 helloWorldTrailingWhitespace =
