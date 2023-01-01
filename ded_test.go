@@ -89,4 +89,19 @@ x =
     2
 `,
 	},
+	Test{
+		description: "Formatted module with different name",
+		input: `module Y exposing (y)
+
+
+y =
+    1
+`,
+		expected: `module Y exposing (y)
+
+
+y =
+    1
+`,
+	},
 }
