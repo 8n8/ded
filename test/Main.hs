@@ -4,6 +4,7 @@ import qualified Data.ByteString
 import qualified Ded
 import qualified Test.Tasty
 import qualified Test.Tasty.HUnit
+import qualified Buf
 
 main :: IO ()
 main =
@@ -17,7 +18,11 @@ tests =
 oneTest :: (String, Data.ByteString.ByteString, Data.ByteString.ByteString) -> Test.Tasty.TestTree
 oneTest (name, input, expected) =
   Test.Tasty.HUnit.testCase name $
-    (Ded.format input) Test.Tasty.HUnit.@?= (Right expected)
+    do
+    buf <- Buf.fromString input
+    _ <- Ded.format buf
+    actual <- Buf.toString buf
+    actual Test.Tasty.HUnit.@?= expected
 
 helloWorldFormatted :: Data.ByteString.ByteString
 helloWorldFormatted =
