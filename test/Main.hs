@@ -28,11 +28,24 @@ helloWorldFormatted =
   \    0\n\
   \"
 
+helloWorldVariantFormatted :: Data.ByteString.ByteString
+helloWorldVariantFormatted =
+  "module Y exposing (y)\n\
+  \\n\
+  \\n\
+  \y =\n\
+  \    0\n\
+  \"
+
 cases ::
   [(String, Data.ByteString.ByteString, Data.ByteString.ByteString)]
 cases =
   [ ( "Hello world formatted, so don't change",
       helloWorldFormatted,
       helloWorldFormatted
+    ),
+    ( "Hello world variant formatted, so don't change",
+      helloWorldVariantFormatted,
+      helloWorldVariantFormatted
     )
   ]
