@@ -5,17 +5,17 @@ import (
 )
 
 func TestAbs(t *testing.T) {
+	var buf [BUF_SIZE]byte
 	for _, test := range tests {
-		var buf [BUF_SIZE]byte
 		copy(buf[:], []byte(test.input))
-		size, err := format(buf, len(test.input))
+		size, err := format(&buf, len(test.input))
 		if err != nil {
 			t.Errorf("%s: %s", test.description, err)
 		}
 
 		if string(buf[:size]) != test.expected {
 			t.Errorf(
-				"%s:\nexpected: %s\ngot: %s",
+				"%s:\nexpected: %q\n     got: %q",
 				test.description,
 				test.expected,
 				string(buf[:size]))
