@@ -60,4 +60,19 @@ x =
     2
 `,
 	},
+	Test{
+		description: "Hello world with double trailing whitespace",
+		input: `module X exposing (x)  
+
+
+x =
+    2
+`,
+		expected: `module X exposing (x)
+
+
+x =
+    2
+`,
+	},
 }
