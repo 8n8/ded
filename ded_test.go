@@ -46,7 +46,7 @@ x =
 `,
 	},
 	Test{
-		description: "Hello world with single trailing whitespace",
+		description: "Single trailing whitespace",
 		input: `module X exposing (x) 
 
 
@@ -61,7 +61,7 @@ x =
 `,
 	},
 	Test{
-		description: "Hello world with double trailing whitespace",
+		description: "Double trailing whitespace",
 		input: `module X exposing (x)  
 
 
