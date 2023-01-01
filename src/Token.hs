@@ -10,6 +10,8 @@ data Token
   | Space
   | Verbatim Verbatim.Verbatim
   | Start
+  | EqualityInfix
+  | Equals
   | End
   deriving (Show)
 
@@ -26,6 +28,7 @@ parse =
   Data.Attoparsec.ByteString.choice
     [ parseNewline,
       parseSpace,
+      parseEqualityInfix,
       fmap Verbatim Verbatim.parse
     ]
 
@@ -41,6 +44,16 @@ parseSpace =
     _ <- Data.Attoparsec.ByteString.word8 asciiSpace
     return Space
 
+asciiEquals :: Data.Word.Word8
+asciiEquals =
+  61
+
+parseEqualityInfix :: Data.Attoparsec.ByteString.Parser Token
+parseEqualityInfix =
+  do
+    _ <- Data.Attoparsec.ByteString.string "=="
+    return EqualityInfix
+
 encode :: Token -> Data.ByteString.ByteString
 encode token =
   case token of
@@ -54,3 +67,5 @@ encode token =
       ""
     End ->
       ""
+    EqualityInfix ->
+      "=="
