@@ -75,4 +75,18 @@ x =
     2
 `,
 	},
+	Test{
+		description: "Newline after top-level bind",
+		input: `module X exposing (x)
+
+
+x = 2
+`,
+		expected: `module X exposing (x)
+
+
+x =
+    2
+`,
+	},
 }
