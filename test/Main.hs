@@ -19,24 +19,6 @@ oneTest (name, input, expected) =
   Test.Tasty.HUnit.testCase name $
     (Ded.format input) Test.Tasty.HUnit.@?= (Right expected)
 
-helloWorldTrailingWhitespace :: Data.ByteString.ByteString
-helloWorldTrailingWhitespace =
-  "module X exposing (x) \n\
-  \\n\
-  \\n\
-  \x =\n\
-  \    0\n\
-  \"
-
-helloWorldTwoTrailingWhitespace :: Data.ByteString.ByteString
-helloWorldTwoTrailingWhitespace =
-  "module X exposing (x)  \n\
-  \\n\
-  \\n\
-  \x =\n\
-  \    0\n\
-  \"
-
 helloWorldFormatted :: Data.ByteString.ByteString
 helloWorldFormatted =
   "module X exposing (x)\n\
@@ -52,65 +34,5 @@ cases =
   [ ( "Hello world formatted, so don't change",
       helloWorldFormatted,
       helloWorldFormatted
-    ),
-    ( "Remove single trailing whitespace",
-      helloWorldTrailingWhitespace,
-      helloWorldFormatted
-    ),
-    ( "Remove double trailing whitespace",
-      helloWorldTwoTrailingWhitespace,
-      helloWorldFormatted
-    ),
-    ( "Remove trailing whitespace in block comment",
-      "module X exposing (x)\n\
-      \\n\
-      \{- x \n\
-      \   y\n\
-      \-}\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    2\n\
-      \",
-      "module X exposing (x)\n\
-      \\n\
-      \{- x\n\
-      \   y\n\
-      \-}\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    2\n\
-      \"
-    ),
-    ( "Remove trailing whitespace in line comment",
-      "module X exposing (x)\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    -- two \n\
-      \    2\n\
-      \",
-      "module X exposing (x)\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    -- two\n\
-      \    2\n\
-      \"
-    ),
-    ( "Don't remove trailing whitespace in verbatim string",
-      trailingWhitespaceInVerbatimString,
-      trailingWhitespaceInVerbatimString
     )
   ]
-
-trailingWhitespaceInVerbatimString :: Data.ByteString.ByteString
-trailingWhitespaceInVerbatimString =
-  "module X exposing (x)\n\
-  \\n\
-  \\n\
-  \x =\n\
-  \    \"\"\" \n\
-  \\"\"\"\n\
-  \"

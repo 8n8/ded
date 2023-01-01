@@ -22,7 +22,6 @@ library:
   source-dirs: src
   dependencies:
   - bytestring
-  - attoparsec
 
 executables:
   ded-exe:
@@ -32,8 +31,6 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
-    dependencies:
-    - ded
 
 tests:
   ded-test:
