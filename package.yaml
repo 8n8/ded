@@ -6,13 +6,15 @@ dependencies:
 
 default-extensions:
 - OverloadedStrings
+- NoImplicitPrelude
+- DuplicateRecordFields
+- NamedFieldPuns
 
 ghc-options:
 - -Werror
 - -Weverything
 - -Wno-safe
 - -Wno-prepositive-qualified-module
-- -Wno-implicit-prelude
 - -Wno-missing-safe-haskell-mode
 - -Wno-unsafe
 - -Wno-missing-kind-signatures

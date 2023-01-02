@@ -1,5 +1,6 @@
 module Main (main) where
 
+import Ast (new)
 import Buf (Buf, append, get, new)
 import Data.ByteString (pack, unpack)
 import Data.Text (Text)
@@ -8,7 +9,19 @@ import Data.Word (Word8)
 import qualified Ded
 import qualified Test.Tasty
 import Test.Tasty.HUnit (testCase, (@?=))
-import Prelude (Either (Left, Right), IO, Int, Maybe (Just, Nothing), String, map, return, reverse, show, ($), (+))
+import Prelude
+  ( Either (Left, Right),
+    IO,
+    Int,
+    Maybe (Just, Nothing),
+    String,
+    map,
+    return,
+    reverse,
+    show,
+    ($),
+    (+),
+  )
 
 main :: IO ()
 main =
@@ -24,12 +37,13 @@ oneTest (name, input, expected) =
   testCase name $
     do
       buf <- Buf.new
+      ast <- Ast.new
       ( do
           result <- bufFromString buf input
           result @?= Right ()
         )
       ( do
-          result <- Ded.format buf
+          result <- Ded.format buf ast
           result @?= Right ()
         )
       eitherActual <- bufToString buf

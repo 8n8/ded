@@ -5,6 +5,7 @@ import Data.Word (Word8)
 import Foreign.Marshal.Alloc (mallocBytes)
 import Foreign.Ptr (Ptr)
 import Foreign.Storable (peekElemOff, pokeElemOff)
+import Prelude (IO, Int, Maybe (Just, Nothing), return, ($), (*), (+), (<), (==), (>=), (||))
 
 data Buf
   = Buf (Ptr Word8) (IORef Int)
