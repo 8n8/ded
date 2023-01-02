@@ -3,7 +3,6 @@ module Ded (format) where
 import qualified Data.ByteString
 import qualified Gap
 import qualified Token
-import qualified Debug.Trace
 
 format ::
   Data.ByteString.ByteString ->
@@ -13,7 +12,6 @@ format unformatted =
     Left err ->
       Left err
     Right gap ->
-      Debug.Trace.trace (show gap) $
       case formatHelp Scrolling gap of
         Left err ->
           Left err
@@ -43,7 +41,6 @@ data StateMachine
   | Failed
   | Finished
   | FindTrailingSpace
-  | CheckSpaceBeforeInfix
   deriving (Eq, Show)
 
 stateMachine :: StateMachine -> Token.Token -> (StateMachine, Gap.Action)
@@ -89,23 +86,3 @@ stateMachine state token =
       (Scrolling, Gap.MoveRightTwice)
     (FindTrailingSpace, Token.End) ->
       (Finished, Gap.DoNothing)
-    (Scrolling, Token.EqualityInfix) ->
-      (CheckSpaceBeforeInfix, Gap.MoveLeft)
-    (CheckSpaceBeforeInfix, Token.Newline) ->
-      (CheckSpaceBeforeInfix, Gap.MoveRight)
-    (Failed, Token.EqualityInfix) ->
-      (Failed, Gap.DoNothing)
-    (Finished, Token.EqualityInfix) ->
-      (Finished, Gap.DoNothing)
-    (FindTrailingSpace, Token.EqualityInfix) ->
-      (Scrolling, Gap.MoveRightTwice)
-    (CheckSpaceBeforeInfix, Token.Space) ->
-      (Scrolling, Gap.MoveRightTwice)
-    (CheckSpaceBeforeInfix, Token.Verbatim _) ->
-      (CheckSpaceBeforeInfix, Gap.MoveRight)
-    (CheckSpaceBeforeInfix, Token.Start) ->
-      (Failed, Gap.DoNothing)
-    (CheckSpaceBeforeInfix, Token.EqualityInfix) ->
-      (Scrolling, Gap.InsertSpace)
-    (CheckSpaceBeforeInfix, Token.End) ->
-      (Failed, Gap.DoNothing)

@@ -45,7 +45,7 @@ asciiDoubleQuote =
 
 isVerbatimChar :: Data.Word.Word8 -> Bool
 isVerbatimChar ch =
-  ch `Data.ByteString.notElem` " \n="
+  ch /= asciiNewline && ch /= asciiSpace
 
 asciiNewline :: Data.Word.Word8
 asciiNewline =
