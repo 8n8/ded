@@ -98,5 +98,14 @@ cases =
     ( "Hello world formatted variant, so don't change",
       helloWorldFormattedVariant,
       helloWorldFormattedVariant
+    ),
+    ( "Single trailing whitespace",
+      "module X exposing (x) \n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    0\n\
+      \",
+      helloWorldFormatted
     )
   ]
