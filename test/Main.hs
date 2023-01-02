@@ -80,10 +80,24 @@ helloWorldFormatted =
   \    0\n\
   \"
 
+
+helloWorldFormattedVariant :: Text
+helloWorldFormattedVariant =
+  "module Y exposing (y)\n\
+  \\n\
+  \\n\
+  \y =\n\
+  \    0\n\
+  \"
+
 cases :: [(String, Text, Text)]
 cases =
   [ ( "Hello world formatted, so don't change",
       helloWorldFormatted,
       helloWorldFormatted
+    )
+  , ( "Hello world formatted variant, so don't change",
+      helloWorldFormattedVariant,
+      helloWorldFormattedVariant
     )
   ]
