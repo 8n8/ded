@@ -20,8 +20,6 @@ ghc-options:
 
 library:
   source-dirs: src
-  dependencies:
-  - bytestring
 
 executables:
   ded-exe:
@@ -45,3 +43,4 @@ tests:
     - tasty-hunit
     - tasty
     - bytestring
+    - text

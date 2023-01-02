@@ -1,9 +1,7 @@
 module Ded (format) where
 
-import qualified Data.ByteString
+import Buf (Buf)
 
-format ::
-  Data.ByteString.ByteString ->
-  Either String Data.ByteString.ByteString
-format input =
-  Right input
+format :: Buf -> IO (Either String ())
+format _ =
+  return $ Right ()
