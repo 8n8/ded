@@ -46,6 +46,15 @@ helloWorldFormatted =
   \    0\n\
   \"
 
+formattedList :: Data.ByteString.ByteString
+formattedList =
+  "module X exposing (x)\n\
+  \\n\
+  \\n\
+  \x =\n\
+  \    [ a, b ]\n\
+  \"
+
 trailingWhitespaceInVerbatimString :: Data.ByteString.ByteString
 trailingWhitespaceInVerbatimString =
   "module X exposing (x)\n\
@@ -120,5 +129,9 @@ cases =
       \x = 0\n\
       \",
       helloWorldFormatted
+    ),
+    ( "Formatted list, so don't change",
+      formattedList,
+      formattedList
     )
   ]
