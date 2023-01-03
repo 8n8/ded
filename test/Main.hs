@@ -133,5 +133,22 @@ cases =
     ( "Formatted list, so don't change",
       formattedList,
       formattedList
+    ),
+    ( "Format multiline list",
+      "module X exposing (x)\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    [ a, b\n\
+      \    ]\n\
+      \",
+      "module X exposing (x)\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    [ a\n\
+      \    , b\n\
+      \    ]\n\
+      \"
     )
   ]
