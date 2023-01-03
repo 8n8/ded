@@ -26,6 +26,7 @@ data Action
   | InsertNewline
   | MoveRightTwice
   | DoNothing
+  deriving (Show)
 
 maybeMap2 :: (a -> b -> c) -> Maybe a -> Maybe b -> Maybe c
 maybeMap2 f maybeA maybeB =

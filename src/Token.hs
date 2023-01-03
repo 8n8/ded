@@ -8,6 +8,7 @@ import qualified Verbatim
 data Token
   = Newline
   | Space
+  | Equals
   | Verbatim Verbatim.Verbatim
   | Start
   | End
@@ -26,6 +27,7 @@ parse =
   Data.Attoparsec.ByteString.choice
     [ parseNewline,
       parseSpace,
+      parseEquals,
       fmap Verbatim Verbatim.parse
     ]
 
@@ -34,6 +36,16 @@ parseNewline =
   do
     _ <- Data.Attoparsec.ByteString.word8 asciiNewline
     return Newline
+
+parseEquals :: Data.Attoparsec.ByteString.Parser Token
+parseEquals =
+  do
+    _ <- Data.Attoparsec.ByteString.word8 asciiEquals
+    return Equals
+
+asciiEquals :: Data.Word.Word8
+asciiEquals =
+  61
 
 parseSpace :: Data.Attoparsec.ByteString.Parser Token
 parseSpace =
@@ -54,3 +66,5 @@ encode token =
       ""
     End ->
       ""
+    Equals ->
+      "="

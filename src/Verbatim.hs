@@ -45,7 +45,7 @@ asciiDoubleQuote =
 
 isVerbatimChar :: Data.Word.Word8 -> Bool
 isVerbatimChar ch =
-  ch /= asciiNewline && ch /= asciiSpace
+  ch /= asciiNewline && ch /= asciiSpace && ch /= asciiEquals
 
 asciiNewline :: Data.Word.Word8
 asciiNewline =
@@ -54,3 +54,7 @@ asciiNewline =
 asciiSpace :: Data.Word.Word8
 asciiSpace =
   32
+
+asciiEquals :: Data.Word.Word8
+asciiEquals =
+  61
