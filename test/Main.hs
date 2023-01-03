@@ -59,60 +59,60 @@ trailingWhitespaceInVerbatimString =
 cases ::
   [(String, Data.ByteString.ByteString, Data.ByteString.ByteString)]
 cases =
-  [ -- ( "Hello world formatted, so don't change",
-    --   helloWorldFormatted,
-    --   helloWorldFormatted
-    -- ),
-    -- ( "Remove single trailing whitespace",
-    --   helloWorldTrailingWhitespace,
-    --   helloWorldFormatted
-    -- ),
-    -- ( "Remove double trailing whitespace",
-    --   helloWorldTwoTrailingWhitespace,
-    --   helloWorldFormatted
-    -- ),
-    -- ( "Remove trailing whitespace in block comment",
-    --   "module X exposing (x)\n\
-    --   \\n\
-    --   \{- x \n\
-    --   \   y\n\
-    --   \-}\n\
-    --   \\n\
-    --   \\n\
-    --   \x =\n\
-    --   \    2\n\
-    --   \",
-    --   "module X exposing (x)\n\
-    --   \\n\
-    --   \{- x\n\
-    --   \   y\n\
-    --   \-}\n\
-    --   \\n\
-    --   \\n\
-    --   \x =\n\
-    --   \    2\n\
-    --   \"
-    -- ),
-    -- ( "Remove trailing whitespace in line comment",
-    --   "module X exposing (x)\n\
-    --   \\n\
-    --   \\n\
-    --   \x =\n\
-    --   \    -- two \n\
-    --   \    2\n\
-    --   \",
-    --   "module X exposing (x)\n\
-    --   \\n\
-    --   \\n\
-    --   \x =\n\
-    --   \    -- two\n\
-    --   \    2\n\
-    --   \"
-    -- ),
-    -- ( "Don't remove trailing whitespace in verbatim string",
-    --   trailingWhitespaceInVerbatimString,
-    --   trailingWhitespaceInVerbatimString
-    -- ),
+  [ ( "Hello world formatted, so don't change",
+      helloWorldFormatted,
+      helloWorldFormatted
+    ),
+    ( "Remove single trailing whitespace",
+      helloWorldTrailingWhitespace,
+      helloWorldFormatted
+    ),
+    ( "Remove double trailing whitespace",
+      helloWorldTwoTrailingWhitespace,
+      helloWorldFormatted
+    ),
+    ( "Remove trailing whitespace in block comment",
+      "module X exposing (x)\n\
+      \\n\
+      \{- x \n\
+      \   y\n\
+      \-}\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    2\n\
+      \",
+      "module X exposing (x)\n\
+      \\n\
+      \{- x\n\
+      \   y\n\
+      \-}\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    2\n\
+      \"
+    ),
+    ( "Remove trailing whitespace in line comment",
+      "module X exposing (x)\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    -- two \n\
+      \    2\n\
+      \",
+      "module X exposing (x)\n\
+      \\n\
+      \\n\
+      \x =\n\
+      \    -- two\n\
+      \    2\n\
+      \"
+    ),
+    ( "Don't remove trailing whitespace in verbatim string",
+      trailingWhitespaceInVerbatimString,
+      trailingWhitespaceInVerbatimString
+    ),
     ( "New line after top-level bind",
       "module X exposing (x)\n\
       \\n\
