@@ -12,8 +12,6 @@ data Token
   | Verbatim Verbatim.Verbatim
   | Start
   | End
-  | OpenBracket
-  | CloseBracket
   deriving (Show)
 
 asciiNewline :: Data.Word.Word8
@@ -30,30 +28,8 @@ parse =
     [ parseNewline,
       parseSpace,
       parseEquals,
-      parseOpenBracket,
-      parseCloseBracket,
       fmap Verbatim Verbatim.parse
     ]
-
-parseOpenBracket :: Data.Attoparsec.ByteString.Parser Token
-parseOpenBracket =
-    do
-    _ <- Data.Attoparsec.ByteString.word8 asciiOpenBracket
-    return OpenBracket
-
-parseCloseBracket :: Data.Attoparsec.ByteString.Parser Token
-parseCloseBracket =
-    do
-    _ <- Data.Attoparsec.ByteString.word8 asciiCloseBracket
-    return CloseBracket
-
-asciiOpenBracket :: Data.Word.Word8
-asciiOpenBracket =
-    91
-
-asciiCloseBracket :: Data.Word.Word8
-asciiCloseBracket =
-    93
 
 parseNewline :: Data.Attoparsec.ByteString.Parser Token
 parseNewline =
@@ -92,9 +68,3 @@ encode token =
       ""
     Equals ->
       "="
-
-    OpenBracket ->
-        "["
-
-    CloseBracket ->
-        "]"
