@@ -41,8 +41,16 @@ data StateMachine
   | Failed
   | Finished
   | FindTrailingSpace
-  | TopLevelBind TopLevelBindMachine
-  | MakeIndent MakeIndentMachine
+  | MakeIndentOne
+  | MakeIndentTwo
+  | MakeIndentThree
+  | MakeIndentFour
+  | MakeIndentRemoveExtraSpaces
+  | TopLevelBindFindNewlineBeforeBind
+  | TopLevelBindScrollPastEquals
+  | TopLevelBindStartOfBindLine
+  | TopLevelBindMoveToTopLevelBind
+  | TopLevelBindInsertNewlineAfterBind
   deriving (Eq, Show)
 
 stateMachine :: StateMachine -> Token.Token -> (StateMachine, Gap.Action)
@@ -50,40 +58,6 @@ stateMachine state token =
   case (state, token) of
     (FindTrailingSpace, Token.Equals) ->
       (Scrolling, Gap.MoveRightTwice)
-    (Finished, Token.Equals) ->
-      (Failed, Gap.DoNothing)
-    (Failed, Token.Equals) ->
-      (Failed, Gap.DoNothing)
-    (Scrolling, Token.Newline) ->
-      (FindTrailingSpace, Gap.MoveLeft)
-    (Failed, Token.Newline) ->
-      (Failed, Gap.DoNothing)
-    (Finished, Token.Newline) ->
-      (Finished, Gap.DoNothing)
-    (Scrolling, Token.Space) ->
-      (Scrolling, Gap.MoveRight)
-    (Failed, Token.Space) ->
-      (Failed, Gap.DoNothing)
-    (Finished, Token.Space) ->
-      (Finished, Gap.DoNothing)
-    (Scrolling, Token.Verbatim _) ->
-      (Scrolling, Gap.MoveRight)
-    (Failed, Token.Verbatim _) ->
-      (Failed, Gap.DoNothing)
-    (Finished, Token.Verbatim _) ->
-      (Finished, Gap.DoNothing)
-    (Scrolling, Token.Start) ->
-      (Scrolling, Gap.MoveRight)
-    (Failed, Token.Start) ->
-      (Failed, Gap.DoNothing)
-    (Finished, Token.Start) ->
-      (Finished, Gap.DoNothing)
-    (Scrolling, Token.End) ->
-      (Finished, Gap.DoNothing)
-    (Failed, Token.End) ->
-      (Failed, Gap.DoNothing)
-    (Finished, Token.End) ->
-      (Finished, Gap.DoNothing)
     (FindTrailingSpace, Token.Newline) ->
       (Scrolling, Gap.MoveRightTwice)
     (FindTrailingSpace, Token.Space) ->
@@ -94,156 +68,159 @@ stateMachine state token =
       (Scrolling, Gap.MoveRightTwice)
     (FindTrailingSpace, Token.End) ->
       (Finished, Gap.DoNothing)
+    (Finished, Token.Equals) ->
+      (Failed, Gap.DoNothing)
+    (Finished, Token.Newline) ->
+      (Finished, Gap.DoNothing)
+    (Finished, Token.Space) ->
+      (Finished, Gap.DoNothing)
+    (Finished, Token.Verbatim _) ->
+      (Finished, Gap.DoNothing)
+    (Finished, Token.Start) ->
+      (Finished, Gap.DoNothing)
+    (Finished, Token.End) ->
+      (Finished, Gap.DoNothing)
+    (Failed, Token.Equals) ->
+      (Failed, Gap.DoNothing)
+    (Failed, Token.Newline) ->
+      (Failed, Gap.DoNothing)
+    (Failed, Token.Space) ->
+      (Failed, Gap.DoNothing)
+    (Failed, Token.Verbatim _) ->
+      (Failed, Gap.DoNothing)
+    (Failed, Token.Start) ->
+      (Failed, Gap.DoNothing)
+    (Failed, Token.End) ->
+      (Failed, Gap.DoNothing)
+    (Scrolling, Token.Newline) ->
+      (FindTrailingSpace, Gap.MoveLeft)
+    (Scrolling, Token.Space) ->
+      (Scrolling, Gap.MoveRight)
+    (Scrolling, Token.Verbatim _) ->
+      (Scrolling, Gap.MoveRight)
+    (Scrolling, Token.Start) ->
+      (Scrolling, Gap.MoveRight)
+    (Scrolling, Token.End) ->
+      (Finished, Gap.DoNothing)
     (Scrolling, Token.Equals) ->
-      (TopLevelBind FindNewlineBeforeBind, Gap.MoveLeft)
-    (TopLevelBind machine, _) ->
-      topLevelBind machine token
-    (MakeIndent machine, _) ->
-      makeIndentMachine machine token
-
-data MakeIndentMachine
-  = One
-  | Two
-  | Three
-  | Four
-  | RemoveExtraSpaces
-  deriving (Eq, Show)
-
-makeIndentMachine :: MakeIndentMachine -> Token.Token -> (StateMachine, Gap.Action)
-makeIndentMachine machine token =
-  case (machine, token) of
-    (One, Token.Space) ->
-      (MakeIndent RemoveExtraSpaces, Gap.MoveRight)
-    (One, Token.Newline) ->
-      (MakeIndent RemoveExtraSpaces, Gap.InsertSpace)
-    (One, Token.Equals) ->
-      (MakeIndent RemoveExtraSpaces, Gap.InsertSpace)
-    (One, Token.Verbatim _) ->
-      (MakeIndent RemoveExtraSpaces, Gap.InsertSpace)
-    (One, Token.Start) ->
+      (TopLevelBindFindNewlineBeforeBind, Gap.MoveLeft)
+    (MakeIndentOne, Token.Space) ->
+      (MakeIndentRemoveExtraSpaces, Gap.MoveRight)
+    (MakeIndentOne, Token.Newline) ->
+      (MakeIndentRemoveExtraSpaces, Gap.InsertSpace)
+    (MakeIndentOne, Token.Equals) ->
+      (MakeIndentRemoveExtraSpaces, Gap.InsertSpace)
+    (MakeIndentOne, Token.Verbatim _) ->
+      (MakeIndentRemoveExtraSpaces, Gap.InsertSpace)
+    (MakeIndentOne, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (One, Token.End) ->
+    (MakeIndentOne, Token.End) ->
       (Failed, Gap.DoNothing)
-    (Two, Token.Newline) ->
-      (MakeIndent One, Gap.InsertSpace)
-    (Two, Token.Equals) ->
-      (MakeIndent One, Gap.InsertSpace)
-    (Two, Token.Verbatim _) ->
-      (MakeIndent One, Gap.InsertSpace)
-    (Two, Token.Start) ->
+    (MakeIndentTwo, Token.Newline) ->
+      (MakeIndentOne, Gap.InsertSpace)
+    (MakeIndentTwo, Token.Equals) ->
+      (MakeIndentOne, Gap.InsertSpace)
+    (MakeIndentTwo, Token.Verbatim _) ->
+      (MakeIndentOne, Gap.InsertSpace)
+    (MakeIndentTwo, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (Two, Token.End) ->
+    (MakeIndentTwo, Token.End) ->
       (Failed, Gap.DoNothing)
-    (Three, Token.Newline) ->
-      (MakeIndent Two, Gap.InsertSpace)
-    (Three, Token.Equals) ->
-      (MakeIndent Two, Gap.InsertSpace)
-    (Three, Token.Verbatim _) ->
-      (MakeIndent Two, Gap.InsertSpace)
-    (Three, Token.Start) ->
-      (MakeIndent Two, Gap.InsertSpace)
-    (Three, Token.End) ->
+    (MakeIndentThree, Token.Newline) ->
+      (MakeIndentTwo, Gap.InsertSpace)
+    (MakeIndentThree, Token.Equals) ->
+      (MakeIndentTwo, Gap.InsertSpace)
+    (MakeIndentThree, Token.Verbatim _) ->
+      (MakeIndentTwo, Gap.InsertSpace)
+    (MakeIndentThree, Token.Start) ->
+      (MakeIndentTwo, Gap.InsertSpace)
+    (MakeIndentThree, Token.End) ->
       (Failed, Gap.DoNothing)
-    (Four, Token.Newline) ->
-      (MakeIndent Three, Gap.InsertSpace)
-    (Four, Token.Equals) ->
-      (MakeIndent Three, Gap.InsertSpace)
-    (Four, Token.Verbatim _) ->
-      (MakeIndent Three, Gap.InsertSpace)
-    (Four, Token.Start) ->
+    (MakeIndentFour, Token.Newline) ->
+      (MakeIndentThree, Gap.InsertSpace)
+    (MakeIndentFour, Token.Equals) ->
+      (MakeIndentThree, Gap.InsertSpace)
+    (MakeIndentFour, Token.Verbatim _) ->
+      (MakeIndentThree, Gap.InsertSpace)
+    (MakeIndentFour, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (Four, Token.End) ->
+    (MakeIndentFour, Token.End) ->
       (Failed, Gap.DoNothing)
-    (Two, Token.Space) ->
-      (MakeIndent One, Gap.MoveRight)
-    (Three, Token.Space) ->
-      (MakeIndent Two, Gap.MoveRight)
-    (Four, Token.Space) ->
-      (MakeIndent Three, Gap.MoveRight)
-    (RemoveExtraSpaces, Token.Space) ->
-      (MakeIndent RemoveExtraSpaces, Gap.Delete)
-    (RemoveExtraSpaces, Token.Newline) ->
-      (MakeIndent RemoveExtraSpaces, Gap.Delete)
-    (RemoveExtraSpaces, Token.Equals) ->
+    (MakeIndentTwo, Token.Space) ->
+      (MakeIndentOne, Gap.MoveRight)
+    (MakeIndentThree, Token.Space) ->
+      (MakeIndentTwo, Gap.MoveRight)
+    (MakeIndentFour, Token.Space) ->
+      (MakeIndentThree, Gap.MoveRight)
+    (MakeIndentRemoveExtraSpaces, Token.Space) ->
+      (MakeIndentRemoveExtraSpaces, Gap.Delete)
+    (MakeIndentRemoveExtraSpaces, Token.Newline) ->
+      (MakeIndentRemoveExtraSpaces, Gap.Delete)
+    (MakeIndentRemoveExtraSpaces, Token.Equals) ->
       (Scrolling, Gap.DoNothing)
-    (RemoveExtraSpaces, Token.Verbatim _) ->
+    (MakeIndentRemoveExtraSpaces, Token.Verbatim _) ->
       (Scrolling, Gap.DoNothing)
-    (RemoveExtraSpaces, Token.Start) ->
+    (MakeIndentRemoveExtraSpaces, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (RemoveExtraSpaces, Token.End) ->
+    (MakeIndentRemoveExtraSpaces, Token.End) ->
       (Failed, Gap.DoNothing)
-
-data TopLevelBindMachine
-  = FindNewlineBeforeBind
-  | ScrollPastEquals
-  | StartOfBindLine
-  | MoveToTopLevelBind
-  | InsertNewlineAfterBind
-  deriving (Eq, Show)
-
-topLevelBind ::
-  TopLevelBindMachine ->
-  Token.Token ->
-  (StateMachine, Gap.Action)
-topLevelBind machine token =
-  case (machine, token) of
-    (FindNewlineBeforeBind, Token.Newline) ->
-      (TopLevelBind StartOfBindLine, Gap.MoveRight)
-    (StartOfBindLine, Token.Newline) ->
-      (TopLevelBind ScrollPastEquals, Gap.MoveRight)
-    (ScrollPastEquals, Token.Newline) ->
-      (TopLevelBind ScrollPastEquals, Gap.MoveRight)
-    (FindNewlineBeforeBind, Token.Space) ->
-      (TopLevelBind FindNewlineBeforeBind, Gap.MoveLeft)
-    (StartOfBindLine, Token.Space) ->
-      (TopLevelBind ScrollPastEquals, Gap.MoveRight)
-    (ScrollPastEquals, Token.Space) ->
-      (TopLevelBind ScrollPastEquals, Gap.MoveRight)
-    (FindNewlineBeforeBind, Token.Equals) ->
-      (TopLevelBind ScrollPastEquals, Gap.MoveRight)
-    (StartOfBindLine, Token.Equals) ->
-      (TopLevelBind ScrollPastEquals, Gap.MoveRight)
-    (ScrollPastEquals, Token.Equals) ->
-      (TopLevelBind InsertNewlineAfterBind, Gap.MoveRight)
-    (FindNewlineBeforeBind, Token.Verbatim _) ->
-      (TopLevelBind FindNewlineBeforeBind, Gap.MoveLeft)
-    (StartOfBindLine, Token.Verbatim _) ->
-      (TopLevelBind MoveToTopLevelBind, Gap.MoveRight)
-    (MoveToTopLevelBind, Token.Newline) ->
+    (TopLevelBindFindNewlineBeforeBind, Token.Newline) ->
+      (TopLevelBindStartOfBindLine, Gap.MoveRight)
+    (TopLevelBindFindNewlineBeforeBind, Token.Space) ->
+      (TopLevelBindFindNewlineBeforeBind, Gap.MoveLeft)
+    (TopLevelBindFindNewlineBeforeBind, Token.Equals) ->
+      (TopLevelBindScrollPastEquals, Gap.MoveRight)
+    (TopLevelBindFindNewlineBeforeBind, Token.Verbatim _) ->
+      (TopLevelBindFindNewlineBeforeBind, Gap.MoveLeft)
+    (TopLevelBindFindNewlineBeforeBind, Token.Start) ->
+      (TopLevelBindMoveToTopLevelBind, Gap.MoveRight)
+    (TopLevelBindFindNewlineBeforeBind, Token.End) ->
       (Failed, Gap.DoNothing)
-    (ScrollPastEquals, Token.Verbatim _) ->
-      (TopLevelBind ScrollPastEquals, Gap.DoNothing)
-    (FindNewlineBeforeBind, Token.Start) ->
-      (TopLevelBind MoveToTopLevelBind, Gap.MoveRight)
-    (StartOfBindLine, Token.Start) ->
+    (TopLevelBindStartOfBindLine, Token.Newline) ->
+      (TopLevelBindScrollPastEquals, Gap.MoveRight)
+    (TopLevelBindStartOfBindLine, Token.Space) ->
+      (TopLevelBindScrollPastEquals, Gap.MoveRight)
+    (TopLevelBindStartOfBindLine, Token.Equals) ->
+      (TopLevelBindScrollPastEquals, Gap.MoveRight)
+    (TopLevelBindStartOfBindLine, Token.Verbatim _) ->
+      (TopLevelBindMoveToTopLevelBind, Gap.MoveRight)
+    (TopLevelBindStartOfBindLine, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (MoveToTopLevelBind, Token.Space) ->
-      (TopLevelBind MoveToTopLevelBind, Gap.MoveRight)
-    (ScrollPastEquals, Token.Start) ->
+    (TopLevelBindStartOfBindLine, Token.End) ->
       (Failed, Gap.DoNothing)
-    (FindNewlineBeforeBind, Token.End) ->
+    (TopLevelBindScrollPastEquals, Token.Newline) ->
+      (TopLevelBindScrollPastEquals, Gap.MoveRight)
+    (TopLevelBindScrollPastEquals, Token.Space) ->
+      (TopLevelBindScrollPastEquals, Gap.MoveRight)
+    (TopLevelBindScrollPastEquals, Token.Equals) ->
+      (TopLevelBindInsertNewlineAfterBind, Gap.MoveRight)
+    (TopLevelBindScrollPastEquals, Token.Verbatim _) ->
+      (TopLevelBindScrollPastEquals, Gap.DoNothing)
+    (TopLevelBindScrollPastEquals, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (StartOfBindLine, Token.End) ->
+    (TopLevelBindScrollPastEquals, Token.End) ->
       (Failed, Gap.DoNothing)
-    (MoveToTopLevelBind, Token.Equals) ->
-      (TopLevelBind InsertNewlineAfterBind, Gap.MoveRight)
-    (InsertNewlineAfterBind, Token.Newline) ->
-      (MakeIndent Four, Gap.MoveRight)
-    (ScrollPastEquals, Token.End) ->
+    (TopLevelBindMoveToTopLevelBind, Token.Newline) ->
       (Failed, Gap.DoNothing)
-    (MoveToTopLevelBind, Token.Verbatim _) ->
-      (TopLevelBind MoveToTopLevelBind, Gap.MoveRight)
-    (InsertNewlineAfterBind, Token.Space) ->
-      (MakeIndent Four, Gap.InsertNewline)
-    (InsertNewlineAfterBind, Token.Equals) ->
+    (TopLevelBindMoveToTopLevelBind, Token.Space) ->
+      (TopLevelBindMoveToTopLevelBind, Gap.MoveRight)
+    (TopLevelBindMoveToTopLevelBind, Token.Equals) ->
+      (TopLevelBindInsertNewlineAfterBind, Gap.MoveRight)
+    (TopLevelBindMoveToTopLevelBind, Token.Verbatim _) ->
+      (TopLevelBindMoveToTopLevelBind, Gap.MoveRight)
+    (TopLevelBindMoveToTopLevelBind, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (MoveToTopLevelBind, Token.Start) ->
+    (TopLevelBindMoveToTopLevelBind, Token.End) ->
       (Failed, Gap.DoNothing)
-    (InsertNewlineAfterBind, Token.Verbatim _) ->
-      (TopLevelBind InsertNewlineAfterBind, Gap.InsertNewline)
-    (MoveToTopLevelBind, Token.End) ->
+    (TopLevelBindInsertNewlineAfterBind, Token.Newline) ->
+      (MakeIndentFour, Gap.MoveRight)
+    (TopLevelBindInsertNewlineAfterBind, Token.Space) ->
+      (MakeIndentFour, Gap.InsertNewline)
+    (TopLevelBindInsertNewlineAfterBind, Token.Equals) ->
       (Failed, Gap.DoNothing)
-    (InsertNewlineAfterBind, Token.Start) ->
+    (TopLevelBindInsertNewlineAfterBind, Token.Verbatim _) ->
+      (TopLevelBindInsertNewlineAfterBind, Gap.InsertNewline)
+    (TopLevelBindInsertNewlineAfterBind, Token.Start) ->
       (Failed, Gap.DoNothing)
-    (InsertNewlineAfterBind, Token.End) ->
+    (TopLevelBindInsertNewlineAfterBind, Token.End) ->
       (Failed, Gap.DoNothing)
