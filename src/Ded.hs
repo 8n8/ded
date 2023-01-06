@@ -187,6 +187,20 @@ topLevelBind ::
   (StateMachine, Gap.Action)
 topLevelBind machine token =
   case (machine, token) of
+    (FindNewlineBeforeBind, Token.OpenBracket) ->
+        (TopLevelBind FindNewlineBeforeBind, Gap.MoveLeft)
+    (FindNewlineBeforeBind, Token.CloseBracket) ->
+        (TopLevelBind FindNewlineBeforeBind, Gap.MoveLeft)
+    (StartOfBindLine, Token.OpenBracket) ->
+        (TopLevelBind MoveToTopLevelBind, Gap.DoNothing)
+    (StartOfBindLine, Token.CloseBracket) ->
+        (TopLevelBind MoveToTopLevelBind, Gap.DoNothing)
+    (ScrollPastEquals, Token.OpenBracket) ->
+        (TopLevelBind ScrollPastEquals, Gap.MoveRight)
+    (ScrollPastEquals, Token.CloseBracket) ->
+        (TopLevelBind ScrollPastEquals, Gap.MoveRight)
+    (MoveToTopLevelBind, Token.OpenBracket) ->
+        (
     (FindNewlineBeforeBind, Token.Newline) ->
       (TopLevelBind StartOfBindLine, Gap.MoveRight)
     (StartOfBindLine, Token.Newline) ->
