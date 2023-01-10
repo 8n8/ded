@@ -4,6 +4,8 @@ import qualified Data.ByteString
 import qualified Ded
 import qualified Test.Tasty
 import qualified Test.Tasty.HUnit
+import qualified Ast
+import qualified Buf
 
 main :: IO ()
 main =
@@ -17,25 +19,14 @@ tests =
 oneTest :: (String, Data.ByteString.ByteString, Data.ByteString.ByteString) -> Test.Tasty.TestTree
 oneTest (name, input, expected) =
   Test.Tasty.HUnit.testCase name $
-    (Ded.format input) Test.Tasty.HUnit.@?= (Right expected)
-
-helloWorldTrailingWhitespace :: Data.ByteString.ByteString
-helloWorldTrailingWhitespace =
-  "module X exposing (x) \n\
-  \\n\
-  \\n\
-  \x =\n\
-  \    0\n\
-  \"
-
-helloWorldTwoTrailingWhitespace :: Data.ByteString.ByteString
-helloWorldTwoTrailingWhitespace =
-  "module X exposing (x)  \n\
-  \\n\
-  \\n\
-  \x =\n\
-  \    0\n\
-  \"
+    do
+    ast <- Ast.new
+    buf <- Buf.new
+    Buf.fill (bufFiller input) buf
+    result <- Ded.format ast buf
+    result Test.Tasty.HUnit.@?= Right ()
+    got <- Buf.toString
+    got Test.Tasty.HUnit.@?= expected
 
 helloWorldFormatted :: Data.ByteString.ByteString
 helloWorldFormatted =
@@ -46,109 +37,11 @@ helloWorldFormatted =
   \    0\n\
   \"
 
-formattedList :: Data.ByteString.ByteString
-formattedList =
-  "module X exposing (x)\n\
-  \\n\
-  \\n\
-  \x =\n\
-  \    [ a, b ]\n\
-  \"
-
-trailingWhitespaceInVerbatimString :: Data.ByteString.ByteString
-trailingWhitespaceInVerbatimString =
-  "module X exposing (x)\n\
-  \\n\
-  \\n\
-  \x =\n\
-  \    \"\"\" \n\
-  \\"\"\"\n\
-  \"
-
 cases ::
   [(String, Data.ByteString.ByteString, Data.ByteString.ByteString)]
 cases =
   [ ( "Hello world formatted, so don't change",
       helloWorldFormatted,
       helloWorldFormatted
-    ),
-    ( "Remove single trailing whitespace",
-      helloWorldTrailingWhitespace,
-      helloWorldFormatted
-    ),
-    ( "Remove double trailing whitespace",
-      helloWorldTwoTrailingWhitespace,
-      helloWorldFormatted
-    ),
-    ( "Remove trailing whitespace in block comment",
-      "module X exposing (x)\n\
-      \\n\
-      \{- x \n\
-      \   y\n\
-      \-}\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    2\n\
-      \",
-      "module X exposing (x)\n\
-      \\n\
-      \{- x\n\
-      \   y\n\
-      \-}\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    2\n\
-      \"
-    ),
-    ( "Remove trailing whitespace in line comment",
-      "module X exposing (x)\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    -- two \n\
-      \    2\n\
-      \",
-      "module X exposing (x)\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    -- two\n\
-      \    2\n\
-      \"
-    ),
-    ( "Don't remove trailing whitespace in verbatim string",
-      trailingWhitespaceInVerbatimString,
-      trailingWhitespaceInVerbatimString
-    ),
-    ( "New line after top-level bind",
-      "module X exposing (x)\n\
-      \\n\
-      \\n\
-      \x = 0\n\
-      \",
-      helloWorldFormatted
-    ),
-    ( "Formatted list, so don't change",
-      formattedList,
-      formattedList
-    ),
-    ( "Format multiline list",
-      "module X exposing (x)\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    [ a, b\n\
-      \    ]\n\
-      \",
-      "module X exposing (x)\n\
-      \\n\
-      \\n\
-      \x =\n\
-      \    [ a\n\
-      \    , b\n\
-      \    ]\n\
-      \"
     )
   ]

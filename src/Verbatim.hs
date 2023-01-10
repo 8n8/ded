@@ -1,60 +1,28 @@
-module Verbatim (Verbatim, parse, encode) where
+module Verbatim (Verbatim, new) where
 
-import qualified Data.Attoparsec.ByteString
-import qualified Data.ByteString
-import qualified Data.Word
+import Data.Word (Word32, Word8)
+import Foreign.Ptr (Ptr)
+import Data.IORef (IORef, newIORef)
+import Foreign.Marshal.Alloc (mallocBytes)
 
-newtype Verbatim
-  = Verbatim Data.ByteString.ByteString
-  deriving (Show)
+data Verbatim
+  = Verbatim (Ptr Word8) (Ptr Word32) (IORef Int)
 
-encode :: Verbatim -> Data.ByteString.ByteString
-encode (Verbatim v) =
-  v
 
-parse :: Data.Attoparsec.ByteString.Parser Verbatim
-parse =
-  Data.Attoparsec.ByteString.choice
-    [ parseVerbatimString,
-      fmap Verbatim $
-        Data.Attoparsec.ByteString.takeWhile1 isVerbatimChar
-    ]
+meanLength :: Int
+meanLength =
+    20
 
-parseVerbatimString :: Data.Attoparsec.ByteString.Parser Verbatim
-parseVerbatimString =
-  do
-    _ <- Data.Attoparsec.ByteString.string "\"\"\""
-    content <-
-      Data.Attoparsec.ByteString.many' $
-        Data.Attoparsec.ByteString.choice
-          [ Data.Attoparsec.ByteString.takeWhile1
-              (\ch -> ch /= asciiDoubleQuote && ch /= asciiBackslash),
-            Data.Attoparsec.ByteString.string "\\\"",
-            Data.Attoparsec.ByteString.string "\\\\"
-          ]
-    _ <- Data.Attoparsec.ByteString.string "\"\"\""
-    return $ Verbatim ("\"\"\"" <> mconcat content <> "\"\"\"")
 
-asciiBackslash :: Data.Word.Word8
-asciiBackslash =
-  92
+maxItems :: Int
+maxItems =
+    100*1000
 
-asciiDoubleQuote :: Data.Word.Word8
-asciiDoubleQuote =
-  34
 
-isVerbatimChar :: Data.Word.Word8 -> Bool
-isVerbatimChar ch =
-  ch /= asciiNewline && ch /= asciiSpace && ch /= asciiEquals
-
-asciiNewline :: Data.Word.Word8
-asciiNewline =
-  10
-
-asciiSpace :: Data.Word.Word8
-asciiSpace =
-  32
-
-asciiEquals :: Data.Word.Word8
-asciiEquals =
-  61
+new :: IO Verbatim
+new =
+    do
+    chars <- mallocBytes (meanLength * maxItems)
+    ends <- mallocBytes (4 * maxItems)
+    num <- newIORef 0
+    return $ Verbatim chars ends num

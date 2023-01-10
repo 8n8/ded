@@ -20,9 +20,6 @@ ghc-options:
 
 library:
   source-dirs: src
-  dependencies:
-  - bytestring
-  - attoparsec
 
 executables:
   ded-exe:
